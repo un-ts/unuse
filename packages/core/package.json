@@ -1,0 +1,69 @@
+{
+  "name": "unuse",
+  "version": "1.0.0",
+  "description": "learn once, use everywhere",
+  "scripts": {
+    "build": "tsdown"
+  },
+  "homepage": "https://github.com/un-ts/unuse/tree/main/packages/core",
+  "bugs": {
+    "url": "https://github.com/un-ts/unuse/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/un-ts/unuse.git",
+    "directory": "packages/core"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "alien-signals": "^2.0.5"
+  },
+  "devDependencies": {
+    "@angular/compiler": "20.0.3",
+    "@angular/platform-browser": "20.0.3",
+    "@solidjs/testing-library": "0.8.10",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/react": "16.3.0",
+    "happy-dom": "18.0.1",
+    "react-dom": "19.1.0"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=20",
+    "@types/react": ">=19",
+    "react": ">=19",
+    "solid-js": ">=1.9",
+    "vue": ">=3.5"
+  },
+  "peerDependenciesMeta": {
+    "@angular/core": {
+      "optional": true
+    },
+    "@types/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.11"
+  }
+}
