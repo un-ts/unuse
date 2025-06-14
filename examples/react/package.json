@@ -1,0 +1,24 @@
+{
+  "name": "react-example",
+  "version": "1.0.0",
+  "description": "React example for unuse-react",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "ts-check": "tsc"
+  },
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "unuse-react": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "@vitejs/plugin-react": "4.5.2",
+    "vite": "6.3.5"
+  }
+}
