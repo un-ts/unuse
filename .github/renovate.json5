@@ -1,0 +1,68 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    "schedule:earlyMondays",
+    "group:allNonMajor",
+    ":prHourlyLimitNone",
+    "helpers:disableTypesNodeMajor"
+  ],
+  "labels": ["c: dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "reviewersFromCodeOwners": true,
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "groupName": "devDependencies",
+      "matchDepTypes": ["devDependencies"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "groupName": "dependencies",
+      "matchDepTypes": ["dependencies"],
+      "rangeStrategy": "replace"
+    },
+    {
+      "groupName": "peerDependencies",
+      "matchDepTypes": ["peerDependencies"],
+      "rangeStrategy": "widen"
+    },
+    {
+      "groupName": "engines",
+      "matchDepTypes": ["engines"],
+      "rangeStrategy": "replace"
+    },
+    {
+      "groupName": "eslint",
+      "matchPackageNames": [
+        "@eslint/**",
+        "@stylistic/**",
+        "eslint",
+        "eslint-**",
+        "typescript-eslint"
+      ]
+    },
+    {
+      "groupName": "vitest",
+      "matchPackageNames": ["@vitest/**", "vitest"]
+    },
+    {
+      "groupName": "prettier",
+      "matchPackageNames": ["prettier"]
+    },
+    {
+      "groupName": "typescript",
+      "matchPackageNames": ["typescript"]
+    },
+    {
+      "groupName": "doc-dependencies",
+      "matchPackageNames": ["@algolia/client-search", "vitepress"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["c: security"],
+    "assignees": ["@Shinigami92"]
+  }
+}
