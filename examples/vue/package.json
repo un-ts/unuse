@@ -1,0 +1,22 @@
+{
+  "name": "vue-example",
+  "version": "1.0.0",
+  "description": "Vue example for @unuse/vue",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "ts-check": "vue-tsc"
+  },
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@unuse/vue": "workspace:*",
+    "vue": "3.5.17"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "5.2.4",
+    "vite": "6.3.5",
+    "vue-tsc": "2.2.10"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@unuse/angular",
+  "version": "1.0.0",
+  "description": "learn once, use everywhere",
+  "scripts": {
+    "build": "tsdown"
+  },
+  "homepage": "https://github.com/un-ts/unuse/tree/main/packages/angular",
+  "bugs": {
+    "url": "https://github.com/un-ts/unuse/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/un-ts/unuse.git",
+    "directory": "packages/angular"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "unuse": "workspace:*"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=20"
+  },
+  "engines": {
+    "node": ">=20.11"
+  }
+}

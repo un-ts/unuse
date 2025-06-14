@@ -1,0 +1,121 @@
+import type { Signal as AngularSignal } from '@angular/core';
+import type { Accessor as SolidAccessor } from 'solid-js';
+import type { SupportedFramework } from '../_framework';
+import { importedFramework } from '../_framework';
+import type { MaybeUnRef } from '../unAccess';
+import type { UnSignal } from '../unSignal';
+import { isUnSignal, unSignal } from '../unSignal';
+
+/**
+ * Tries to convert any given framework-specific ref/signal/state to an `UnSignal`.
+ *
+ * The reactivity will be maintained, meaning that changes to the framework-specific ref/signal/state will also update the `UnSignal`, and vice versa. However, this only works if the given value is reactive.
+ *
+ * @param value The value to convert to an `UnSignal`.
+ *
+ * @returns An `UnSignal` that wraps the given value, or an empty `UnSignal` if the value is `undefined` or `null`.
+ */
+export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
+  if (value === undefined) {
+    return unSignal() as UnSignal<T>;
+  }
+
+  if (value === null) {
+    return unSignal(null) as UnSignal<T>;
+  }
+
+  if (isUnSignal(value)) {
+    return value;
+  }
+
+  const framework = globalThis.__UNUSE_FRAMEWORK__ as
+    | SupportedFramework
+    | undefined;
+
+  if (!framework) {
+    return unSignal(value) as UnSignal<T>;
+  }
+
+  switch (framework) {
+    case 'angular': {
+      const Angular = importedFramework('angular');
+
+      if (Angular.isSignal(value)) {
+        const result = unSignal<T>((value as AngularSignal<T>)());
+
+        Angular.effect(() => {
+          result.set((value as AngularSignal<T>)());
+        });
+      }
+
+      break;
+    }
+
+    case 'react': {
+      const React = importedFramework('react');
+
+      if (typeof value === 'object' && 'current' in value) {
+        // got ref
+        const result = unSignal<T>(value.current);
+
+        React.useEffect(() => {
+          result.set(value.current);
+        }, [value]);
+      } else if (Array.isArray(value) && (value as unknown[]).length > 0) {
+        // got state
+        const result = unSignal<T>(value[0] as T);
+
+        React.useEffect(() => {
+          result.set(value[0] as T);
+        });
+      }
+
+      break;
+    }
+
+    case 'solid': {
+      const Solid = importedFramework('solid');
+
+      if (typeof value === 'function') {
+        // got Accessor
+        const result = unSignal<T>((value as SolidAccessor<T>)());
+
+        Solid.createEffect(() => {
+          result.set((value as SolidAccessor<T>)());
+        });
+      } else if (
+        Array.isArray(value) &&
+        (value as unknown[]).length > 0 &&
+        typeof value[0] === 'function'
+      ) {
+        // got Signal
+        const accessor = value[0] as SolidAccessor<T>;
+        const result = unSignal<T>(accessor());
+
+        Solid.createEffect(() => {
+          result.set(accessor());
+        });
+      }
+
+      break;
+    }
+
+    case 'vue': {
+      const Vue = importedFramework('vue');
+
+      if (Vue.isRef(value)) {
+        const result = unSignal<T>(value.value);
+
+        Vue.watch(value, (newValue) => {
+          result.set(newValue);
+        });
+
+        return result;
+      }
+
+      break;
+    }
+  }
+
+  return unSignal(value) as UnSignal<T>;
+}
