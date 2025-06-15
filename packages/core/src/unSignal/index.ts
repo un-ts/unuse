@@ -10,6 +10,13 @@ export interface UnSignal<T> {
 
 export function unSignal<T>(initialValue: T): UnSignal<T>;
 export function unSignal<T = undefined>(): UnSignal<T | undefined>;
+/**
+ * Creates an `UnSignal`, which is a writable signal-like object that can be used to manage state.
+ *
+ * @param initialValue The initial value of the signal. If not provided, it defaults to `undefined`.
+ *
+ * @returns An `UnSignal` object that has a `get` method to retrieve the current value and a `set` method to update the value.
+ */
 export function unSignal<T>(initialValue?: T): UnSignal<T> {
   const state = signal(initialValue);
   return {

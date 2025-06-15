@@ -1,12 +1,12 @@
-import { describe, expect, it } from 'vitest';
+// @vitest-environment happy-dom
+
+import { renderHook as renderReactHook } from '@testing-library/react';
+import { useRef as useReactRef, useState as useReactState } from 'react';
+import { expect, it } from 'vitest';
 import { unAccess } from '.';
-import { unSignal } from '../unSignal';
+import { describeReact } from '../_testUtils/react';
 
-describe('unAccess', () => {
-  it('should be defined', () => {
-    expect(unAccess).toBeTypeOf('function');
-  });
-
+describeReact('unAccess', () => {
   it('should resolve null', () => {
     const actual = unAccess(null);
     expect(actual).toBe(null);
@@ -33,9 +33,17 @@ describe('unAccess', () => {
     expect(actual).toBe(42);
   });
 
-  describe('UnSignal', () => {
-    it('should resolve an UnSignal', () => {
-      const state = unSignal(42);
+  it('should resolve a React ref', () => {
+    renderReactHook(() => {
+      const state = useReactRef(42);
+      const actual = unAccess(state);
+      expect(actual).toBe(42);
+    });
+  });
+
+  it('should resolve a React state', () => {
+    renderReactHook(() => {
+      const state = useReactState(42);
       const actual = unAccess(state);
       expect(actual).toBe(42);
     });

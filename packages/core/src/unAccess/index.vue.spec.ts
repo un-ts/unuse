@@ -1,12 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { expect, it } from 'vitest';
+import { ref as vueRef } from 'vue';
 import { unAccess } from '.';
-import { unSignal } from '../unSignal';
+import { describeVue } from '../_testUtils/vue';
 
-describe('unAccess', () => {
-  it('should be defined', () => {
-    expect(unAccess).toBeTypeOf('function');
-  });
-
+describeVue('unAccess', () => {
   it('should resolve null', () => {
     const actual = unAccess(null);
     expect(actual).toBe(null);
@@ -33,11 +30,9 @@ describe('unAccess', () => {
     expect(actual).toBe(42);
   });
 
-  describe('UnSignal', () => {
-    it('should resolve an UnSignal', () => {
-      const state = unSignal(42);
-      const actual = unAccess(state);
-      expect(actual).toBe(42);
-    });
+  it('should resolve a Vue ref', () => {
+    const state = vueRef(42);
+    const actual = unAccess(state);
+    expect(actual).toBe(42);
   });
 });
