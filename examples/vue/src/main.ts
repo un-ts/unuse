@@ -1,4 +1,5 @@
 import { initFrameworkImport } from 'unuse';
+import 'unuse/vue';
 import { createApp } from 'vue';
 import App from './App.vue';
 

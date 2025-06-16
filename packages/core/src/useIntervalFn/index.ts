@@ -1,18 +1,20 @@
+import type { SupportedFramework } from '../_framework';
 import { IS_CLIENT } from '../isClient';
 import { tryOnScopeDispose } from '../tryOnScopeDispose';
 import type { MaybeUnRef } from '../unAccess';
 import { isUnRef, unAccess } from '../unAccess';
 import { unComputed } from '../unComputed';
 import { unResolve } from '../unResolve';
-import type { UnSignal } from '../unSignal';
 import { unSignal } from '../unSignal';
 import { unWatch } from '../unWatch';
 
-export interface Pausable {
+interface Pausable {
   /**
    * A ref indicate whether a pausable instance is active.
    */
-  readonly isActive: UnSignal<boolean>;
+  readonly isActive: ReturnType<
+    typeof unResolve<boolean, SupportedFramework | undefined, true>
+  >;
 
   /**
    * Temporary pause the effect from executing.

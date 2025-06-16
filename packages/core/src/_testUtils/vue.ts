@@ -1,3 +1,4 @@
+import 'unuse/vue';
 import type { SuiteCollector, SuiteFactory } from 'vitest';
 import { beforeAll, describe } from 'vitest';
 import { initFrameworkImport } from '../_framework';

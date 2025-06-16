@@ -7,41 +7,40 @@ import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
 import type { UnSignal } from '../unSignal';
 
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options: {
-    framework: 'angular';
-    readonly?: boolean;
-  }
-): AngularWritableSignal<T>;
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options: {
-    framework: 'react';
-    readonly?: boolean;
-  }
-): ReturnType<typeof useReactState<T>>;
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options: {
-    framework: 'solid';
-    readonly?: boolean;
-  }
-): SolidSignal<T>;
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options: {
-    framework: 'vue';
-    readonly?: boolean;
-  }
-): VueRef<T>;
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options?: {
-    framework?: undefined;
-    readonly?: boolean;
-  }
-): UnSignal<T>;
+export interface UnResolveOptions<
+  TFramework extends SupportedFramework | undefined = undefined,
+  TReadonly extends boolean = false,
+> {
+  /**
+   * @default undefined
+   */
+  framework?: TFramework;
+  /**
+   * @default false
+   */
+  readonly?: TReadonly;
+}
+
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options: UnResolveOptions<'angular'>
+// ): AngularWritableSignal<T>;
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options: UnResolveOptions<'react'>
+// ): ReturnType<typeof useReactState<T>>;
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options: UnResolveOptions<'solid'>
+// ): SolidSignal<T>;
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options: UnResolveOptions<'vue'>
+// ): VueRef<T>;
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options?: UnResolveOptions
+// ): UnSignal<T>;
 /**
  * Converts an `UnSignal` to a framework-specific ref/signal/state.
  *
@@ -52,22 +51,26 @@ export function unResolve<T>(
  *
  * @returns The framework-specific ref/signal/state.
  */
-export function unResolve<T>(
+export function unResolve<
+  T,
+  TFramework extends SupportedFramework | undefined = undefined,
+  TReadonly extends boolean = false,
+>(
   signal: UnSignal<T>,
-  options: {
-    framework?: 'angular' | 'react' | 'solid' | 'vue' | undefined;
-    readonly?: boolean;
-  } = {}
-):
-  | AngularWritableSignal<T>
-  | ReturnType<typeof useReactState<T>>
-  | UnSignal<T>
-  | SolidSignal<T>
-  | VueRef<T> {
+  options: UnResolveOptions<TFramework, TReadonly> = {}
+): TFramework extends 'angular'
+  ? AngularWritableSignal<T>
+  : TFramework extends 'react'
+    ? ReturnType<typeof useReactState<T>>
+    : TFramework extends 'solid'
+      ? SolidSignal<T>
+      : TFramework extends 'vue'
+        ? VueRef<T>
+        : UnSignal<T> {
   const {
     framework = process.env.UNUSE_FRAMEWORK as SupportedFramework | undefined,
     readonly = false as boolean,
-  } = options;
+  } = options as UnResolveOptions<SupportedFramework | undefined>;
 
   // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
   switch (framework) {

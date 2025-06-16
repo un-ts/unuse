@@ -1,10 +1,9 @@
 // @vitest-environment happy-dom
 
+import type { Pausable } from 'unuse';
+import { useIntervalFn } from 'unuse';
 import { beforeEach, expect, it, vi } from 'vitest';
-import type { Ref } from 'vue';
 import { isRef, shallowRef } from 'vue';
-import type { Pausable } from '.';
-import { useIntervalFn } from '.';
 import { describeVue } from '../_testUtils/vue';
 
 describeVue('useIntervalFn', () => {
@@ -17,20 +16,20 @@ describeVue('useIntervalFn', () => {
 
   async function exec({ isActive, pause, resume }: Pausable) {
     expect(isActive).toSatisfy(isRef);
-    expect((isActive as unknown as Ref<boolean>).value).toBeTruthy();
+    expect(isActive.value).toBeTruthy();
     expect(callback).toHaveBeenCalledTimes(0);
 
     await vi.advanceTimersByTimeAsync(60);
     expect(callback).toHaveBeenCalledTimes(1);
 
     pause();
-    expect((isActive as unknown as Ref<boolean>).value).toBeFalsy();
+    expect(isActive.value).toBeFalsy();
 
     await vi.advanceTimersByTimeAsync(60);
     expect(callback).toHaveBeenCalledTimes(1);
 
     resume();
-    expect((isActive as unknown as Ref<boolean>).value).toBeTruthy();
+    expect(isActive.value).toBeTruthy();
 
     await vi.advanceTimersByTimeAsync(60);
     expect(callback).toHaveBeenCalledTimes(2);

@@ -21,6 +21,14 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./react": {
+      "types": "./dist/typeOverrides/react.d.ts",
+      "default": "./dist/typeOverrides/react.js"
+    },
+    "./vue": {
+      "types": "./dist/typeOverrides/vue.d.ts",
+      "default": "./dist/typeOverrides/vue.js"
+    },
     "./package.json": "./package.json"
   },
   "types": "dist/index.d.ts",
