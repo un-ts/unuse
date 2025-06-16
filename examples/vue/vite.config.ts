@@ -3,4 +3,9 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [vue()],
+  define: {
+    'process.env': {
+      UNUSE_FRAMEWORK: 'vue',
+    },
+  },
 });

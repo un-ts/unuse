@@ -3,11 +3,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
 
+import 'unuse/vue';
+
+import { useWebSocket } from 'unuse';
 import { beforeEach, expect, it, vi } from 'vitest';
-import type { Ref } from 'vue';
 import { createApp, defineComponent, h, isRef } from 'vue';
-import type { WebSocketStatus } from '.';
-import { useWebSocket } from '.';
 import { describeVue } from '../_testUtils/vue';
 
 describeVue('useWebSocket', () => {
@@ -55,18 +55,14 @@ describeVue('useWebSocket', () => {
     });
 
     expect(vm.ref.data).toSatisfy(isRef);
-    expect((vm.ref.data as unknown as Ref<unknown>).value).toBe(null);
+    expect(vm.ref.data.value).toBe(null);
     expect(vm.ref.status).toSatisfy(isRef);
-    expect((vm.ref.status as unknown as Ref<WebSocketStatus>).value).toBe(
-      'CONNECTING'
-    );
+    expect(vm.ref.status.value).toBe('CONNECTING');
     expect(mockWebSocket).toBeCalledWith('ws://localhost', []);
     expect(vm.ref.close).toBeTypeOf('function');
     expect(vm.ref.send).toBeTypeOf('function');
     expect(vm.ref.open).toBeTypeOf('function');
     expect(vm.ref.ws).toSatisfy(isRef);
-    expect(
-      (vm.ref.ws as unknown as Ref<WebSocket | undefined>).value
-    ).toBeDefined();
+    expect(vm.ref.ws.value).toBeDefined();
   });
 });

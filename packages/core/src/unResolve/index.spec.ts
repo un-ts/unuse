@@ -19,7 +19,7 @@ describe('unResolve', () => {
     it('should update the UnSignal on change', () => {
       const mySignal = unSignal(0);
 
-      const actual = unResolve(mySignal, {});
+      const actual = unResolve(mySignal, { framework: undefined });
 
       expect(actual.get()).toBe(0);
 
@@ -30,7 +30,7 @@ describe('unResolve', () => {
     it('should update back the original signal on change', () => {
       const mySignal = unSignal(0);
 
-      const actual = unResolve(mySignal, {});
+      const actual = unResolve(mySignal, { framework: undefined });
 
       actual.set(100);
       expect(mySignal.get()).toBe(100);

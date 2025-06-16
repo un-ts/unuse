@@ -9,6 +9,8 @@ import type {
   Signal as SolidSignal,
 } from 'solid-js';
 import type { Ref as VueRef } from 'vue';
+import { isRef } from 'vue';
+import type { SupportedFramework } from '../_framework';
 import type { UnComputed } from '../unComputed';
 import { isUnComputed } from '../unComputed';
 import type { UnSignal } from '../unSignal';
@@ -27,6 +29,54 @@ export type UnRef<T> =
   | UnSignal<T>
   | UnComputed<T>
   | (() => T);
+
+export function isUnRef<T>(value: unknown): value is UnRef<T> {
+  if (value === undefined || value === null) {
+    return false;
+  }
+
+  if (
+    typeof value === 'bigint' ||
+    typeof value === 'boolean' ||
+    typeof value === 'number' ||
+    typeof value === 'string' ||
+    typeof value === 'symbol'
+  ) {
+    return false;
+  }
+
+  if (isUnSignal(value) || isUnComputed(value)) {
+    return true;
+  }
+
+  const framework = process.env.UNUSE_FRAMEWORK as
+    | SupportedFramework
+    | undefined;
+
+  if (framework) {
+    switch (framework) {
+      case 'angular': {
+        break;
+      }
+
+      case 'react': {
+        break;
+      }
+
+      case 'solid': {
+        break;
+      }
+
+      case 'vue': {
+        if (isRef(value)) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
 
 /**
  * MaybeUnRef represents a value that can either be a direct value or an UnRef.

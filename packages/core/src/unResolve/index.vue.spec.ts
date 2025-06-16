@@ -1,8 +1,7 @@
+import { unResolve, unSignal } from 'unuse';
 import { expect, it } from 'vitest';
 import { isRef as isVueRef } from 'vue';
-import { unResolve } from '.';
 import { describeVue } from '../_testUtils/vue';
-import { unSignal } from '../unSignal';
 
 describeVue('unResolve', () => {
   it('should resolve to an Vue Ref', () => {

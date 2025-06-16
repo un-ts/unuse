@@ -12,7 +12,7 @@
     "test": "vitest",
     "coverage": "vitest --coverage",
     "prepublishOnly": "pnpm install && pnpm run build",
-    "preflight": "pnpm install && run-s format build lint test ts-check"
+    "preflight": "pnpm install && run-s format lint build test ts-check"
   },
   "private": true,
   "homepage": "https://github.com/un-ts/unuse",

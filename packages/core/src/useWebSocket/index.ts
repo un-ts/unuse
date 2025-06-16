@@ -6,7 +6,6 @@ import { tryOnScopeDispose } from '../tryOnScopeDispose';
 import type { MaybeUnRef, UnRef } from '../unAccess';
 import { unAccess } from '../unAccess';
 import { unResolve } from '../unResolve';
-import type { UnSignal } from '../unSignal';
 import { unSignal } from '../unSignal';
 import { unWatch } from '../unWatch';
 import { useEventListener } from '../useEventListener';
@@ -123,12 +122,12 @@ export interface UseWebSocketReturn<TData> {
    *
    * Can be watched to respond to incoming messages.
    */
-  readonly data: UnSignal<TData | null>;
+  readonly data: ReturnType<typeof unResolve<TData | null>>;
 
   /**
    * The current WebSocket status.
    */
-  readonly status: UnSignal<WebSocketStatus>;
+  readonly status: ReturnType<typeof unResolve<WebSocketStatus>>;
 
   /**
    * Closes the WebSocket connection gracefully.
@@ -156,7 +155,7 @@ export interface UseWebSocketReturn<TData> {
   /**
    * Reference to the WebSocket instance.
    */
-  readonly ws: UnSignal<WebSocket | undefined>;
+  readonly ws: ReturnType<typeof unResolve<WebSocket | undefined>>;
 }
 
 function resolveNestedOptions<T>(options: T | true): T {

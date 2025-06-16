@@ -1,17 +1,20 @@
+import type { SupportedFramework } from '../_framework';
 import { IS_CLIENT } from '../isClient';
 import { tryOnScopeDispose } from '../tryOnScopeDispose';
 import type { MaybeUnRef } from '../unAccess';
-import { unAccess } from '../unAccess';
+import { isUnRef, unAccess } from '../unAccess';
+import { unComputed } from '../unComputed';
 import { unResolve } from '../unResolve';
-import type { UnSignal } from '../unSignal';
-import { isUnSignal, unSignal } from '../unSignal';
+import { unSignal } from '../unSignal';
 import { unWatch } from '../unWatch';
 
-export interface Pausable {
+interface Pausable {
   /**
    * A ref indicate whether a pausable instance is active.
    */
-  readonly isActive: UnSignal<boolean>;
+  readonly isActive: ReturnType<
+    typeof unResolve<boolean, SupportedFramework | undefined, true>
+  >;
 
   /**
    * Temporary pause the effect from executing.
@@ -66,12 +69,12 @@ export function useIntervalFn(
     }
   }
 
-  function pause() {
+  const pause: UseIntervalFnReturn['pause'] = () => {
     isActiveRef.set(false);
     clean();
-  }
+  };
 
-  function resume() {
+  const resume: UseIntervalFnReturn['resume'] = () => {
     const intervalValue = unAccess(interval);
     if (intervalValue <= 0) {
       return;
@@ -86,14 +89,16 @@ export function useIntervalFn(
     if (isActiveRef.get()) {
       timer = setInterval(cb, intervalValue);
     }
-  }
+  };
 
   if (immediate && IS_CLIENT) {
     resume();
   }
 
-  if (isUnSignal(interval) /* || typeof interval === 'function'*/) {
-    const stopWatch = unWatch(interval, () => {
+  if (isUnRef(interval) /* || typeof interval === 'function'*/) {
+    const intervalRef = unComputed(() => unAccess(interval));
+
+    const stopWatch = unWatch(intervalRef, () => {
       if (isActiveRef.get() && IS_CLIENT) {
         resume();
       }

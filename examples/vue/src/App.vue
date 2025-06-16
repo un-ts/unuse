@@ -5,9 +5,7 @@ import { isRef } from 'vue';
 
 const signal = unSignal<string>('Hello, World!');
 
-const resolvedVueRef: Ref<string> = unResolve(signal, {
-  framework: 'vue',
-});
+const resolvedVueRef: Ref<string> = unResolve(signal);
 
 const isVueRef = isRef(resolvedVueRef);
 

@@ -1,54 +1,46 @@
-import type {
-  Signal as AngularSignal,
-  WritableSignal as AngularWritableSignal,
-} from '@angular/core';
-import {
-  effect as angularEffect,
-  signal as angularSignal,
-} from '@angular/core';
+import type { WritableSignal as AngularWritableSignal } from '@angular/core';
 import { effect } from 'alien-signals';
-import { useState as useReactState } from 'react';
+import type { useState as useReactState } from 'react';
 import type { Signal as SolidSignal } from 'solid-js';
-import { createSignal } from 'solid-js';
 import type { Ref as VueRef } from 'vue';
-import { ref as vueRef, watch as vueWatch } from 'vue';
+import type { SupportedFramework } from '../_framework';
+import { importFramework } from '../_framework';
 import type { UnSignal } from '../unSignal';
 
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options: {
-    framework: 'angular';
-    readonly?: boolean;
-  }
-): AngularWritableSignal<T>;
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options: {
-    framework: 'react';
-    readonly?: boolean;
-  }
-): ReturnType<typeof useReactState<T>>;
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options: {
-    framework: 'solid';
-    readonly?: boolean;
-  }
-): SolidSignal<T>;
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options: {
-    framework: 'vue';
-    readonly?: boolean;
-  }
-): VueRef<T>;
-export function unResolve<T>(
-  signal: UnSignal<T>,
-  options?: {
-    framework?: undefined;
-    readonly?: boolean;
-  }
-): UnSignal<T>;
+export interface UnResolveOptions<
+  TFramework extends SupportedFramework | undefined = undefined,
+  TReadonly extends boolean = false,
+> {
+  /**
+   * @default undefined
+   */
+  framework?: TFramework;
+  /**
+   * @default false
+   */
+  readonly?: TReadonly;
+}
+
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options: UnResolveOptions<'angular'>
+// ): AngularWritableSignal<T>;
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options: UnResolveOptions<'react'>
+// ): ReturnType<typeof useReactState<T>>;
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options: UnResolveOptions<'solid'>
+// ): SolidSignal<T>;
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options: UnResolveOptions<'vue'>
+// ): VueRef<T>;
+// export function unResolve<T>(
+//   signal: UnSignal<T>,
+//   options?: UnResolveOptions
+// ): UnSignal<T>;
 /**
  * Converts an `UnSignal` to a framework-specific ref/signal/state.
  *
@@ -59,36 +51,47 @@ export function unResolve<T>(
  *
  * @returns The framework-specific ref/signal/state.
  */
-export function unResolve<T>(
+export function unResolve<
+  T,
+  TFramework extends SupportedFramework | undefined = undefined,
+  TReadonly extends boolean = false,
+>(
   signal: UnSignal<T>,
-  options: {
-    framework?: 'angular' | 'react' | 'solid' | 'vue' | undefined;
-    readonly?: boolean;
-  } = {}
-):
-  | AngularSignal<T>
-  | ReturnType<typeof useReactState<T>>
-  | UnSignal<T>
-  | SolidSignal<T>
-  | VueRef<T> {
-  const { framework = process.env.UNUSE_FRAMEWORK, readonly = false } = options;
+  options: UnResolveOptions<TFramework, TReadonly> = {}
+): TFramework extends 'angular'
+  ? AngularWritableSignal<T>
+  : TFramework extends 'react'
+    ? ReturnType<typeof useReactState<T>>
+    : TFramework extends 'solid'
+      ? SolidSignal<T>
+      : TFramework extends 'vue'
+        ? VueRef<T>
+        : UnSignal<T> {
+  const {
+    framework = process.env.UNUSE_FRAMEWORK as SupportedFramework | undefined,
+    readonly = false as boolean,
+  } = options as UnResolveOptions<SupportedFramework | undefined>;
 
   // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
   switch (framework) {
     case 'angular': {
-      const state = angularSignal(signal.get());
+      const Angular = importFramework('angular');
+
+      const state = Angular.signal(signal.get());
 
       effect(() => state.set(signal.get()));
 
       if (!readonly) {
-        angularEffect(() => signal.set(state()));
+        Angular.effect(() => signal.set(state()));
       }
 
       return state;
     }
 
     case 'react': {
-      const state = useReactState(signal.get());
+      const React = importFramework('react');
+
+      const state = React.useState(signal.get());
 
       if (!readonly) {
         // HACK @Shinigami92 2025-06-15: This is horrible dangerously unsafe, but currently works 👀
@@ -124,7 +127,9 @@ export function unResolve<T>(
     }
 
     case 'solid': {
-      const state = createSignal(signal.get());
+      const Solid = importFramework('solid');
+
+      const state = Solid.createSignal(signal.get());
 
       if (!readonly) {
         // HACK @Shinigami92 2025-06-15: This is horrible dangerously unsafe, but currently works 👀
@@ -154,12 +159,14 @@ export function unResolve<T>(
     }
 
     case 'vue': {
-      const state = vueRef(signal.get());
+      const Vue = importFramework('vue');
+
+      const state = Vue.ref(signal.get());
 
       effect(() => (state.value = signal.get()));
 
       if (!readonly) {
-        vueWatch(state, (newValue) => signal.set(newValue), { flush: 'sync' });
+        Vue.watch(state, (newValue) => signal.set(newValue), { flush: 'sync' });
       }
 
       return state as VueRef<T>;
