@@ -1,6 +1,7 @@
 import type {
   Signal as AngularSignal,
   WritableSignal as AngularWritableSignal,
+  EnvironmentInjector,
 } from '@angular/core';
 import { effect } from 'alien-signals';
 import type { useMemo as useReactMemo, useState as useReactState } from 'react';
@@ -29,6 +30,8 @@ export interface UnResolveOptions<
    * @default false
    */
   readonly?: TReadonly;
+
+  AngularEnvironmentInjector?: EnvironmentInjector;
 }
 
 export type ReadonlyUnResolveReturn<
@@ -96,6 +99,7 @@ export function unResolve<
       | SupportedFramework
       | undefined,
     readonly = false as boolean,
+    AngularEnvironmentInjector,
   } = options;
 
   // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
@@ -109,21 +113,29 @@ export function unResolve<
       effect(() => state.set(signal.get()));
 
       if (!readonly) {
-        // HACK @Shinigami92 2025-06-20: This is horrible dangerously unsafe, but currently works 👀
-        const originalSet = state.set;
+        if (AngularEnvironmentInjector) {
+          Angular.runInInjectionContext(AngularEnvironmentInjector, () => {
+            Angular.effect(() => {
+              signal.set(state());
+            });
+          });
+        } else {
+          // HACK @Shinigami92 2025-06-20: This is horrible dangerously unsafe, but currently works 👀
+          const originalSet = state.set;
 
-        state.set = (value) => {
-          originalSet(value);
-          signal.set(value);
-        };
+          state.set = (value) => {
+            originalSet(value);
+            signal.set(value);
+          };
 
-        const originalUpdate = state.update;
+          const originalUpdate = state.update;
 
-        state.update = (updater) => {
-          const result = updater(signal.get());
-          originalUpdate(() => result);
-          signal.set(result);
-        };
+          state.update = (updater) => {
+            const result = updater(signal.get());
+            originalUpdate(() => result);
+            signal.set(result);
+          };
+        }
       }
 
       // @ts-expect-error: just do it

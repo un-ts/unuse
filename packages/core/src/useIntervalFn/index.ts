@@ -1,3 +1,4 @@
+import type { EnvironmentInjector } from '@angular/core';
 import { IS_CLIENT } from '../isClient';
 import { toUnSignal } from '../toUnSignal';
 import { tryOnScopeDispose } from '../tryOnScopeDispose';
@@ -39,6 +40,8 @@ export interface UseIntervalFnOptions {
    * @default false
    */
   immediateCallback?: boolean;
+
+  AngularEnvironmentInjector?: EnvironmentInjector;
 }
 
 export type UseIntervalFnReturn = Pausable;
@@ -55,7 +58,11 @@ export function useIntervalFn(
   interval: MaybeUnRef<number> = 1000,
   options: UseIntervalFnOptions = {}
 ): UseIntervalFnReturn {
-  const { immediate = true, immediateCallback = false } = options;
+  const {
+    immediate = true,
+    immediateCallback = false,
+    AngularEnvironmentInjector,
+  } = options;
 
   let timer: ReturnType<typeof setInterval> | null = null;
   const isActiveRef = unSignal(false);
@@ -100,13 +107,16 @@ export function useIntervalFn(
       }
     });
 
-    tryOnScopeDispose(stopWatch);
+    tryOnScopeDispose(stopWatch, { AngularEnvironmentInjector });
   }
 
-  tryOnScopeDispose(pause);
+  tryOnScopeDispose(pause, { AngularEnvironmentInjector });
 
   return {
-    isActive: unResolve(isActiveRef, { readonly: true }),
+    isActive: unResolve(isActiveRef, {
+      readonly: true,
+      AngularEnvironmentInjector,
+    }),
     pause,
     resume,
   };

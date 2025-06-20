@@ -1,3 +1,4 @@
+import type { EnvironmentInjector } from '@angular/core';
 import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
 
@@ -6,7 +7,12 @@ import { importedFramework } from '../_framework';
  *
  * @param fn
  */
-export function tryOnScopeDispose(fn: () => void): boolean {
+export function tryOnScopeDispose(
+  fn: () => void,
+  options: {
+    AngularEnvironmentInjector?: EnvironmentInjector;
+  } = {}
+): boolean {
   const framework = globalThis.__UNUSE_FRAMEWORK__ as
     | SupportedFramework
     | undefined;
@@ -17,7 +23,21 @@ export function tryOnScopeDispose(fn: () => void): boolean {
 
   switch (framework) {
     case 'angular': {
-      return false;
+      const Angular = importedFramework('angular');
+
+      const injector = options.AngularEnvironmentInjector;
+      if (!injector) {
+        throw new Error(
+          'AngularInjector is required for tryOnScopeDispose in Angular.'
+        );
+      }
+
+      Angular.runInInjectionContext(injector, () => {
+        const destroyRef = Angular.inject(Angular.DestroyRef);
+        destroyRef.onDestroy(fn);
+      });
+
+      return true;
     }
 
     case 'react': {

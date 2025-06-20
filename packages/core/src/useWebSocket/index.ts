@@ -1,4 +1,5 @@
 /* eslint-disable unicorn/prefer-add-event-listener */
+import type { EnvironmentInjector } from '@angular/core';
 import { IS_CLIENT } from '../isClient';
 import { IS_WORKER } from '../isWorker';
 import { toUnSignal } from '../toUnSignal';
@@ -115,6 +116,8 @@ export interface UseWebSocketOptions {
    * @default []
    */
   protocols?: string[];
+
+  AngularEnvironmentInjector?: EnvironmentInjector;
 }
 
 export interface UseWebSocketReturn<TData> {
@@ -182,6 +185,7 @@ export function useWebSocket<TData = unknown>(
     autoConnect = true,
     autoClose = true,
     protocols = [],
+    AngularEnvironmentInjector,
   } = options;
 
   const dataRef = unSignal<TData | null>(null);
@@ -348,7 +352,7 @@ export function useWebSocket<TData = unknown>(
         }, pongTimeout);
       },
       interval,
-      { immediate: false }
+      { immediate: false, AngularEnvironmentInjector }
     );
 
     heartbeatPause = pause;
@@ -360,7 +364,7 @@ export function useWebSocket<TData = unknown>(
       useEventListener('beforeunload', () => close(), { passive: true });
     }
 
-    tryOnScopeDispose(close);
+    tryOnScopeDispose(close, { AngularEnvironmentInjector });
   }
 
   const open: UseWebSocketReturn<TData>['open'] = () => {

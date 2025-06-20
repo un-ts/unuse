@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { EnvironmentInjector } from '@angular/core';
 import { IS_CLIENT } from '../isClient';
 import { isObject } from '../isObject';
 import { toArray } from '../toArray';
@@ -141,7 +142,12 @@ export function useEventListener<EventType = Event>(
   target: MaybeUnRef<Arrayable<EventTarget> | null | undefined>,
   event: MaybeUnRef<Arrayable<string>>,
   listener: MaybeUnRef<Arrayable<GeneralEventListener<EventType>>>,
-  options?: MaybeUnRef<boolean | AddEventListenerOptions>
+  options?: MaybeUnRef<
+    | boolean
+    | (AddEventListenerOptions & {
+        AngularEnvironmentInjector?: EnvironmentInjector;
+      })
+  >
 ): UseEventListenerReturn;
 
 export function useEventListener(
@@ -158,6 +164,11 @@ export function useEventListener(
   const event = firstParamTargets.get() ? args[1] : args[0];
   const listener = firstParamTargets.get() ? args[2] : args[1];
   const options = firstParamTargets.get() ? args[3] : args[2];
+
+  const AngularEnvironmentInjector: EnvironmentInjector | undefined =
+    typeof options !== 'boolean' &&
+    options != null &&
+    (unAccess(options) as any).AngularEnvironmentInjector;
 
   const cleanups: Array<() => void> = [];
   function cleanup() {
@@ -220,7 +231,7 @@ export function useEventListener(
     cleanup();
   };
 
-  tryOnScopeDispose(cleanup);
+  tryOnScopeDispose(cleanup, { AngularEnvironmentInjector });
 
   return stop;
 }
