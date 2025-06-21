@@ -6,7 +6,29 @@
 
 # unuse
 
-`unuse` is a package inspired by `VueUse`, but aims to be framework-agnostic.
+`unuse` is a package inspired by [VueUse](https://vueuse.org), but aims to be framework-agnostic.
+
+_This is the monorepo for `unuse`_
+
+You can find the core package at [packages/unuse](https://github.com/un-ts/unuse/tree/main/packages/unuse).
+
+Framework-specific adapters are available for:
+
+- [unuse-angular](https://github.com/un-ts/unuse/tree/main/packages/unuse-angular)  
+  Support for [Angular](https://angular.dev), using `@angular/core`.
+
+- [unuse-react](https://github.com/un-ts/unuse/tree/main/packages/unuse-react)  
+  Support for [React](https://react.dev), using `react`.
+
+- [unuse-solid](https://github.com/un-ts/unuse/tree/main/packages/unuse-solid)
+  Support for [SolidJS](https://docs.solidjs.com), using `solid-js`.
+
+- [unuse-vue](https://github.com/un-ts/unuse/tree/main/packages/unuse-vue)
+  Support for [Vue 3](https://vuejs.org), using `vue`.
+
+There are also examples for each framework in the [examples](https://github.com/un-ts/unuse/tree/main/examples) directory.
+
+See the [contributing guide](https://github.com/un-ts/unuse/blob/main/CONTRIBUTING.md) for detailed contribution steps.
 
 # UNDER CONSTRUCTION
 
