@@ -35,6 +35,16 @@ export type UnRef<T> =
   | UnComputed<T>
   | (() => T);
 
+const REGISTRY: {
+  isUnRefOverride?: typeof isUnRef;
+} = {
+  isUnRefOverride: undefined,
+};
+
+export function overrideIsUnRefFn(fn: typeof isUnRef): void {
+  REGISTRY.isUnRefOverride = fn;
+}
+
 export function isUnRef<T>(value: unknown): value is UnRef<T> {
   if (value === undefined || value === null) {
     return false;
@@ -52,6 +62,10 @@ export function isUnRef<T>(value: unknown): value is UnRef<T> {
 
   if (isUnSignal(value) || isUnComputed(value)) {
     return true;
+  }
+
+  if (typeof REGISTRY.isUnRefOverride === 'function') {
+    return REGISTRY.isUnRefOverride(value);
   }
 
   const framework = globalThis.__UNUSE_FRAMEWORK__ as

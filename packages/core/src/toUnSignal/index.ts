@@ -6,6 +6,16 @@ import type { MaybeUnRef } from '../unAccess';
 import type { UnSignal } from '../unSignal';
 import { isUnSignal, unSignal } from '../unSignal';
 
+const REGISTRY: {
+  toUnSignalOverride?: typeof toUnSignal;
+} = {
+  toUnSignalOverride: undefined,
+};
+
+export function overrideToUnSignalFn(fn: typeof toUnSignal): void {
+  REGISTRY.toUnSignalOverride = fn;
+}
+
 /**
  * Tries to convert any given framework-specific ref/signal/state to an `UnSignal`.
  *
@@ -26,6 +36,10 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
 
   if (isUnSignal(value)) {
     return value;
+  }
+
+  if (typeof REGISTRY.toUnSignalOverride === 'function') {
+    return REGISTRY.toUnSignalOverride(value);
   }
 
   const framework = globalThis.__UNUSE_FRAMEWORK__ as

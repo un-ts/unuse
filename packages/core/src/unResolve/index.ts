@@ -71,6 +71,16 @@ export type UnResolveReturn<
   ? ReadonlyUnResolveReturn<T, TFramework>
   : WritableUnResolveReturn<T, TFramework>;
 
+const REGISTRY: {
+  unResolveOverride?: typeof unResolve;
+} = {
+  unResolveOverride: undefined,
+};
+
+export function overrideUnResolveFn(fn: typeof unResolve): void {
+  REGISTRY.unResolveOverride = fn;
+}
+
 /**
  * Converts an `UnSignal` to a framework-specific ref/signal/state.
  *
@@ -91,6 +101,10 @@ export function unResolve<
   signal: UnSignal<T>,
   options: UnResolveOptions<TFramework, TReadonly> = {}
 ): UnResolveReturn<T, TFramework, TReadonly> {
+  if (typeof REGISTRY.unResolveOverride === 'function') {
+    return REGISTRY.unResolveOverride(signal, options);
+  }
+
   const {
     framework = globalThis.__UNUSE_FRAMEWORK__ as
       | SupportedFramework

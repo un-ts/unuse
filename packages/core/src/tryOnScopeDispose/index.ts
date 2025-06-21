@@ -1,12 +1,28 @@
 import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
 
+const REGISTRY: {
+  tryOnScopeDisposeOverride?: typeof tryOnScopeDispose;
+} = {
+  tryOnScopeDisposeOverride: undefined,
+};
+
+export function overrideTryOnScopeDisposeFn(
+  fn: typeof tryOnScopeDispose
+): void {
+  REGISTRY.tryOnScopeDisposeOverride = fn;
+}
+
 /**
  * Call framework's specific onScopeDispose() if it's inside an effect scope lifecycle, if not, do nothing.
  *
  * @param fn
  */
 export function tryOnScopeDispose(fn: () => void): boolean {
+  if (typeof REGISTRY.tryOnScopeDisposeOverride === 'function') {
+    return REGISTRY.tryOnScopeDisposeOverride(fn);
+  }
+
   const framework = globalThis.__UNUSE_FRAMEWORK__ as
     | SupportedFramework
     | undefined;

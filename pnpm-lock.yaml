@@ -192,6 +192,9 @@ importers:
       '@angular/core':
         specifier: '>=20'
         version: 20.0.4(@angular/compiler@20.0.4)(rxjs@7.8.2)
+      alien-signals:
+        specifier: 2.0.5
+        version: 2.0.5
       unuse:
         specifier: workspace:*
         version: link:../core
@@ -241,15 +244,25 @@ importers:
 
   packages/react:
     dependencies:
+      alien-signals:
+        specifier: ^2.0.5
+        version: 2.0.5
       react:
         specifier: '>=19'
         version: 19.1.0
       unuse:
         specifier: workspace:*
         version: link:../core
+    devDependencies:
+      '@types/react':
+        specifier: 19.1.8
+        version: 19.1.8
 
   packages/solid:
     dependencies:
+      alien-signals:
+        specifier: ^2.0.5
+        version: 2.0.5
       solid-js:
         specifier: '>=1.9'
         version: 1.9.7
@@ -259,6 +272,9 @@ importers:
 
   packages/vue:
     dependencies:
+      alien-signals:
+        specifier: ^2.0.5
+        version: 2.0.5
       unuse:
         specifier: workspace:*
         version: link:../core

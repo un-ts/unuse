@@ -27,7 +27,11 @@
     "dist"
   ],
   "dependencies": {
+    "alien-signals": "^2.0.5",
     "unuse": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8"
   },
   "peerDependencies": {
     "react": ">=19"
