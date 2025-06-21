@@ -1,10 +1,6 @@
 // @vitest-environment happy-dom
 
-import {
-  isSignal as isAngularSignal,
-  NgModule,
-  provideZonelessChangeDetection,
-} from '@angular/core';
+import { isSignal as isAngularSignal } from '@angular/core';
 import { getTestBed } from '@angular/core/testing';
 import {
   BrowserTestingModule,
@@ -12,12 +8,8 @@ import {
 } from '@angular/platform-browser/testing';
 import { beforeAll, expect, it, vi } from 'vitest';
 import { unResolve } from '.';
-import { describeAngular } from '../_testUtils/angular';
+import { describeAngular, ZonelessTestModule } from '../_testUtils/angular';
 import { unSignal } from '../unSignal';
-
-@NgModule({ providers: [provideZonelessChangeDetection()] })
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class ZonelessTestModule {}
 
 describeAngular('unResolve', () => {
   beforeAll(() => {

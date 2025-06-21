@@ -52,6 +52,8 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     createSolidEffect(() => {
       result.set((value as SolidAccessor<T>)());
     });
+
+    return result;
   } else if (
     Array.isArray(value) &&
     (value as unknown[]).length > 0 &&
@@ -64,6 +66,12 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     createSolidEffect(() => {
       result.set(accessor());
     });
+
+    effect(() => {
+      value[1](() => result.get());
+    });
+
+    return result;
   }
 
   return unSignal(value) as UnSignal<T>;

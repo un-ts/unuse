@@ -49,6 +49,8 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     useReactEffect(() => {
       result.set(value.current);
     }, [value]);
+
+    return result;
   } else if (Array.isArray(value) && (value as unknown[]).length > 0) {
     // got state
     const result = unSignal<T>(value[0] as T);
@@ -56,6 +58,14 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     useReactEffect(() => {
       result.set(value[0] as T);
     });
+
+    effect(() => {
+      if (value[0] !== result.get()) {
+        value[1](() => result.get());
+      }
+    });
+
+    return result;
   }
 
   return unSignal(value) as UnSignal<T>;

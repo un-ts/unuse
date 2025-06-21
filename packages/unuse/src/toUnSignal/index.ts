@@ -1,5 +1,7 @@
 import type { Signal as AngularSignal } from '@angular/core';
+import { effect } from 'alien-signals';
 import type { Accessor as SolidAccessor } from 'solid-js';
+import type { Ref as VueRef } from 'vue';
 import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
 import type { MaybeUnRef } from '../unAccess';
@@ -60,6 +62,14 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
         Angular.effect(() => {
           result.set((value as AngularSignal<T>)());
         });
+
+        if ('set' in value) {
+          effect(() => {
+            value.set(result.get());
+          });
+        }
+
+        return result;
       }
 
       break;
@@ -75,6 +85,8 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
         React.useEffect(() => {
           result.set(value.current);
         }, [value]);
+
+        return result;
       } else if (Array.isArray(value) && (value as unknown[]).length > 0) {
         // got state
         const result = unSignal<T>(value[0] as T);
@@ -82,6 +94,14 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
         React.useEffect(() => {
           result.set(value[0] as T);
         });
+
+        effect(() => {
+          if (value[0] !== result.get()) {
+            value[1](() => result.get());
+          }
+        });
+
+        return result;
       }
 
       break;
@@ -97,6 +117,8 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
         Solid.createEffect(() => {
           result.set((value as SolidAccessor<T>)());
         });
+
+        return result;
       } else if (
         Array.isArray(value) &&
         (value as unknown[]).length > 0 &&
@@ -109,6 +131,12 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
         Solid.createEffect(() => {
           result.set(accessor());
         });
+
+        effect(() => {
+          value[1](() => result.get());
+        });
+
+        return result;
       }
 
       break;
@@ -120,9 +148,19 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
       if (Vue.isRef(value)) {
         const result = unSignal<T>(value.value);
 
-        Vue.watch(value, (newValue) => {
-          result.set(newValue);
-        });
+        Vue.watch(
+          value,
+          (newValue) => {
+            result.set(newValue);
+          },
+          { flush: 'sync' }
+        );
+
+        if (!Vue.isReadonly(value)) {
+          effect(() => {
+            (value as VueRef<T>).value = result.get();
+          });
+        }
 
         return result;
       }

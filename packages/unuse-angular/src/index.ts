@@ -50,6 +50,14 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     angularEffect(() => {
       result.set((value as AngularSignal<T>)());
     });
+
+    if ('set' in value) {
+      effect(() => {
+        value.set(result.get());
+      });
+    }
+
+    return result;
   }
 
   return unSignal(value) as UnSignal<T>;

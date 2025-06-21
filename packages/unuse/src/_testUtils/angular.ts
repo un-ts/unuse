@@ -1,3 +1,4 @@
+import { NgModule, provideZonelessChangeDetection } from '@angular/core';
 import type { SuiteCollector, SuiteFactory } from 'vitest';
 import { beforeAll, describe } from 'vitest';
 import { initFrameworkImport } from '../_framework';
@@ -27,3 +28,7 @@ export function describeAngular(
     describe('Angular', fn);
   });
 }
+
+@NgModule({ providers: [provideZonelessChangeDetection()] })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class ZonelessTestModule {}

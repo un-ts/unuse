@@ -1,40 +1,13 @@
 // @vitest-environment happy-dom
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import { beforeEach, expect, it, vi } from 'vitest';
 import type { Ref } from 'vue';
-import { createApp, defineComponent, h, isRef } from 'vue';
+import { isRef } from 'vue';
 import type { WebSocketStatus } from '.';
 import { useWebSocket } from '.';
-import { describeVue } from '../_testUtils/vue';
+import { describeVue, useSetup } from '../_testUtils/vue';
 
 describeVue('useWebSocket', () => {
-  type InstanceType<V> = V extends { new (...arg: any[]): infer X } ? X : never;
-  type VM<V> = InstanceType<V> & { unmount: () => void };
-
-  function mount<V>(Comp: V) {
-    const el = document.createElement('div');
-    const app = createApp(Comp as any);
-
-    const unmount = () => app.unmount();
-    const comp = app.mount(el) as any as VM<V>;
-    comp.unmount = unmount;
-    return comp;
-  }
-
-  function useSetup<V>(setup: () => V) {
-    const Comp = defineComponent({
-      setup,
-      render() {
-        return h('div', []);
-      },
-    });
-
-    return mount(Comp);
-  }
-
   const mockWebSocket = vi.fn<(host: string) => WebSocket>();
 
   mockWebSocket.prototype.send = vi.fn();

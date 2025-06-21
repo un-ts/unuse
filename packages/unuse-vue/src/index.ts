@@ -17,6 +17,7 @@ import {
 import type { ComputedRef as VueComputedRef, Ref as VueRef } from 'vue';
 import {
   getCurrentScope as getCurrentVueScope,
+  isReadonly as isVueReadonly,
   isRef as isVueRef,
   onScopeDispose as onVueScopeDispose,
   ref as vueRef,
@@ -46,9 +47,19 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
   if (isVueRef(value)) {
     const result = unSignal<T>(value.value);
 
-    vueWatch(value, (newValue) => {
-      result.set(newValue);
-    });
+    vueWatch(
+      value,
+      (newValue) => {
+        result.set(newValue);
+      },
+      { flush: 'sync' }
+    );
+
+    if (!isVueReadonly(value)) {
+      effect(() => {
+        (value as VueRef<T>).value = result.get();
+      });
+    }
 
     return result;
   }
