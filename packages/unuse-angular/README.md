@@ -1,5 +1,5 @@
 [![NPM package](https://img.shields.io/npm/v/unuse-angular.svg)](https://www.npmjs.com/package/unuse-angular)
-[![Downloads](https://img.shields.io/npm/dt/unuse-angularvue.svg)](https://www.npmjs.com/package/unuse-angular)
+[![Downloads](https://img.shields.io/npm/dt/unuse-angular.svg)](https://www.npmjs.com/package/unuse-angular)
 [![Build Status](https://github.com/un-ts/unuse/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/un-ts/unuse/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/github/license/un-ts/unuse.svg)](https://github.com/un-ts/unuse/blob/main/LICENSE)
 [![Open Collective](https://img.shields.io/opencollective/backers/unts)](https://opencollective.com/unts#section-contributors)
