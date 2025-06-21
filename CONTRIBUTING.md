@@ -17,7 +17,7 @@ Right now `unuse` is in early development, so there is not much available yet.
    pnpm run preflight
    ```
 
-   This will not only install all needed dependencies, but also set run formatting and linting checks, as well as build the project, then run tests and check TypeScript types.
+   This will not only install all needed dependencies, but also run formatting and linting checks, as well as build the project, then run tests and check TypeScript types.
 
 You can run `pnpm run preflight` at any time to ensure everything works as expected.
 
