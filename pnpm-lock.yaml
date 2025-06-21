@@ -154,12 +154,12 @@ importers:
 
   examples/solid:
     dependencies:
-      '@unuse/solid':
-        specifier: workspace:*
-        version: link:../../packages/solid
       solid-js:
         specifier: 1.9.7
         version: 1.9.7
+      unuse:
+        specifier: workspace:*
+        version: link:../../packages/core
     devDependencies:
       vite:
         specifier: 6.3.5

@@ -1,5 +1,5 @@
-import { unResolve, unSignal, useIntervalFn } from '@unuse/solid';
 import type { JSX, Signal } from 'solid-js';
+import { unResolve, unSignal, useIntervalFn } from 'unuse';
 
 export default function App(): JSX.Element {
   const signal = unSignal<string>('Hello, World!');

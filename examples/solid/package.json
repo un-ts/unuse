@@ -1,8 +1,9 @@
 {
   "name": "solid-example",
   "version": "1.0.0",
-  "description": "Solid example for @unuse/solid",
+  "description": "Solid example for unuse",
   "scripts": {
+    "postinstall": "unuse-fix",
     "build": "vite build",
     "dev": "vite",
     "preview": "vite preview",
@@ -11,7 +12,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@unuse/solid": "workspace:*",
+    "unuse": "workspace:*",
     "solid-js": "1.9.7"
   },
   "devDependencies": {

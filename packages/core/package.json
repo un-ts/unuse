@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "learn once, use everywhere",
   "scripts": {
-    "build": "tsdown"
+    "build": "tsdown",
+    "postinstall": "node ./scripts/postinstall.js"
   },
   "homepage": "https://github.com/un-ts/unuse/tree/main/packages/core",
   "bugs": {
@@ -18,13 +19,20 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
+    "./solid/_framework/index": "./dist/solid/_framework/index.js",
+    "./solid/unResolve/index": "./dist/solid/unResolve/index.js",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "unuse-fix": "bin/unuse-fix.js"
+  },
   "files": [
-    "dist"
+    "bin",
+    "dist",
+    "scripts"
   ],
   "dependencies": {
     "alien-signals": "^2.0.5"
