@@ -16,19 +16,22 @@ export function unWatch<T>(
 ): () => void {
   let { immediate = false } = options;
 
+  let firstRun = true;
   let oldValue: T | undefined = undefined;
 
   return effectScope(() => {
     effect(() => {
       const value = source.get();
 
-      if (value !== oldValue || immediate) {
+      if ((value !== oldValue && !firstRun) || immediate) {
         // Reset immediate after the first call so that it doesn't trigger again
         immediate = false;
 
         callback(value, oldValue);
         oldValue = value;
       }
+
+      firstRun = false;
     });
   });
 }
