@@ -7,6 +7,8 @@
     "build": "pnpm -r build",
     "format": "prettier --cache --write .",
     "lint": "eslint --cache --cache-strategy content .",
+    "docs:build": "pnpm --filter unuse-docs run build",
+    "docs:dev": "pnpm --filter unuse-docs run dev",
     "example:angular": "pnpm --filter angular-example run dev",
     "example:react": "pnpm --filter react-example run dev",
     "example:solid": "pnpm --filter solid-example run dev",

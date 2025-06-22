@@ -1,0 +1,15 @@
+{
+  "name": "unuse-docs",
+  "version": "1.0.0",
+  "description": "Documentation Website for unuse",
+  "scripts": {
+    "build": "vitepress build",
+    "dev": "vitepress dev",
+    "preview": "vitepress preview"
+  },
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "vitepress": "1.6.3"
+  }
+}
