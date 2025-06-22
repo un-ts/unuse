@@ -13,6 +13,7 @@ describe('unSignal', () => {
     expect(mySignal).toBeTypeOf('object');
     expect(mySignal.get).toBeTypeOf('function');
     expect(mySignal.set).toBeTypeOf('function');
+    expect(mySignal.update).toBeTypeOf('function');
     expect(isUnSignal(mySignal)).toBe(true);
   });
 
@@ -22,6 +23,7 @@ describe('unSignal', () => {
     expect(mySignal).toBeTypeOf('object');
     expect(mySignal.get).toBeTypeOf('function');
     expect(mySignal.set).toBeTypeOf('function');
+    expect(mySignal.update).toBeTypeOf('function');
     expect(isUnSignal(mySignal)).toBe(true);
   });
 
@@ -34,6 +36,19 @@ describe('unSignal', () => {
     const mySignal = unSignal(42);
     mySignal.set(100);
     expect(mySignal.get()).toBe(100);
+  });
+
+  it('should update based on previous value', () => {
+    const mySignal = unSignal(42);
+    mySignal.update((prev) => prev + 10);
+    expect(mySignal.get()).toBe(52);
+  });
+
+  it('should handle multiple consecutive updates', () => {
+    const mySignal = unSignal(10);
+    mySignal.update((prev) => prev * 2); // 20
+    mySignal.update((prev) => prev + 5); // 25
+    expect(mySignal.get()).toBe(25);
   });
 
   describe('isUnSignal', () => {
@@ -66,9 +81,17 @@ describe('unSignal', () => {
 
     it('should return false for an object with UN_SIGNAL but not true', () => {
       const obj = {
-        [Symbol('UN_SIGNAL')]: false,
+        [UN_SIGNAL]: false,
         get: () => 42,
         set: () => {},
+        update: () => {},
+      };
+      expect(isUnSignal(obj)).toBe(false);
+    });
+
+    it('should return false for an object with UN_SIGNAL but missing functions', () => {
+      const obj = {
+        [UN_SIGNAL]: true,
       };
       expect(isUnSignal(obj)).toBe(false);
     });
@@ -78,6 +101,7 @@ describe('unSignal', () => {
         [UN_SIGNAL]: true,
         get: () => 42,
         set: () => {},
+        update: () => {},
       };
       expect(isUnSignal(obj)).toBe(true);
     });
