@@ -13,6 +13,7 @@ describe('unSignal', () => {
     expect(mySignal).toBeTypeOf('object');
     expect(mySignal.get).toBeTypeOf('function');
     expect(mySignal.set).toBeTypeOf('function');
+    expect(mySignal.update).toBeTypeOf('function');
     expect(isUnSignal(mySignal)).toBe(true);
   });
 
@@ -22,6 +23,7 @@ describe('unSignal', () => {
     expect(mySignal).toBeTypeOf('object');
     expect(mySignal.get).toBeTypeOf('function');
     expect(mySignal.set).toBeTypeOf('function');
+    expect(mySignal.update).toBeTypeOf('function');
     expect(isUnSignal(mySignal)).toBe(true);
   });
 
@@ -40,6 +42,13 @@ describe('unSignal', () => {
     const mySignal = unSignal(42);
     mySignal.update((prev) => prev + 10);
     expect(mySignal.get()).toBe(52);
+  });
+
+  it('should handle multiple consecutive updates', () => {
+    const mySignal = unSignal(10);
+    mySignal.update((prev) => prev * 2); // 20
+    mySignal.update((prev) => prev + 5); // 25
+    expect(mySignal.get()).toBe(25);
   });
 
   describe('isUnSignal', () => {
