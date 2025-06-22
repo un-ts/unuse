@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import-x/export */
-import { effect } from 'alien-signals';
 import type {
   Accessor as SolidAccessor,
   Signal as SolidSignal,
@@ -22,6 +22,7 @@ import {
   overrideTryOnScopeDisposeFn,
   overrideUnResolveFn,
   unComputed,
+  unEffect,
   unSignal,
 } from 'unuse';
 
@@ -50,7 +51,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>((value as SolidAccessor<T>)());
 
     createSolidEffect(() => {
-      result.set((value as SolidAccessor<T>)());
+      result.set((value as SolidAccessor<any>)());
     });
 
     return result;
@@ -64,10 +65,10 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>(accessor());
 
     createSolidEffect(() => {
-      result.set(accessor());
+      result.set(accessor() as any);
     });
 
-    effect(() => {
+    unEffect(() => {
       value[1](() => result.get());
     });
 
@@ -138,11 +139,11 @@ function unResolve<
     if (!readonly) {
       createSolidEffect(() => {
         const value = state[0]();
-        signal.set(value);
+        signal.set(value as any);
       });
     }
 
-    effect(() => state[1](() => signal.get()));
+    unEffect(() => state[1](() => signal.get()));
 
     // @ts-expect-error: just do it
     return readonly ? state[0] : state;

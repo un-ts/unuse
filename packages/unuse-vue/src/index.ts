@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import-x/export */
-import { effect } from 'alien-signals';
 import type {
   MaybeUnRef,
   SupportedFramework,
@@ -12,6 +12,7 @@ import {
   overrideTryOnScopeDisposeFn,
   overrideUnResolveFn,
   unComputed,
+  unEffect,
   unSignal,
 } from 'unuse';
 import type { ComputedRef as VueComputedRef, Ref as VueRef } from 'vue';
@@ -50,13 +51,13 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     vueWatch(
       value,
       (newValue) => {
-        result.set(newValue);
+        result.set(newValue as any);
       },
       { flush: 'sync' }
     );
 
     if (!isVueReadonly(value)) {
-      effect(() => {
+      unEffect(() => {
         (value as VueRef<T>).value = result.get();
       });
     }
@@ -125,10 +126,18 @@ function unResolve<
   if (framework === 'vue') {
     const state = vueRef(signal.get());
 
-    effect(() => (state.value = signal.get()));
+    unEffect(() => (state.value = signal.get()));
 
     if (!readonly) {
-      vueWatch(state, (newValue) => signal.set(newValue), { flush: 'sync' });
+      vueWatch(
+        state,
+        (newValue) => {
+          signal.set(newValue);
+        },
+        {
+          flush: 'sync',
+        }
+      );
     }
 
     // @ts-expect-error: just do it

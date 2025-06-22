@@ -1,5 +1,5 @@
-import { effect, effectScope } from 'alien-signals';
 import type { UnComputed } from '../unComputed';
+import { unEffect, unEffectScope } from '../unEffect';
 import type { UnSignal } from '../unSignal';
 
 export interface UnWatchOptions {
@@ -18,8 +18,8 @@ export function unWatch<T>(
 
   let oldValue: T | undefined = undefined;
 
-  return effectScope(() => {
-    effect(() => {
+  return unEffectScope(() => {
+    unEffect(() => {
       const value = source.get();
 
       if (value !== oldValue || immediate) {

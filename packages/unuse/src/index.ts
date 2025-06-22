@@ -7,6 +7,7 @@ export * from './toUnSignal';
 export * from './tryOnScopeDispose';
 export * from './unAccess';
 export * from './unComputed';
+export * from './unEffect';
 export * from './unRefElement';
 export * from './unResolve';
 export * from './unSignal';

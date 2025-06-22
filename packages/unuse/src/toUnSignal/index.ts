@@ -1,10 +1,10 @@
 import type { Signal as AngularSignal } from '@angular/core';
-import { effect } from 'alien-signals';
 import type { Accessor as SolidAccessor } from 'solid-js';
 import type { Ref as VueRef } from 'vue';
 import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
 import type { MaybeUnRef } from '../unAccess';
+import { unEffect } from '../unEffect';
 import type { UnSignal } from '../unSignal';
 import { isUnSignal, unSignal } from '../unSignal';
 
@@ -64,7 +64,7 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
         });
 
         if ('set' in value) {
-          effect(() => {
+          unEffect(() => {
             value.set(result.get());
           });
         }
@@ -95,7 +95,7 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
           result.set(value[0] as T);
         });
 
-        effect(() => {
+        unEffect(() => {
           if (value[0] !== result.get()) {
             value[1](() => result.get());
           }
@@ -132,7 +132,7 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
           result.set(accessor());
         });
 
-        effect(() => {
+        unEffect(() => {
           value[1](() => result.get());
         });
 
@@ -157,7 +157,7 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
         );
 
         if (!Vue.isReadonly(value)) {
-          effect(() => {
+          unEffect(() => {
             (value as VueRef<T>).value = result.get();
           });
         }

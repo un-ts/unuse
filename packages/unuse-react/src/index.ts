@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import-x/export */
-import { effect } from 'alien-signals';
 import type {
   Dispatch as ReactDispatch,
   RefObject as ReactRefObject,
@@ -19,6 +19,7 @@ import {
   overrideTryOnScopeDisposeFn,
   overrideUnResolveFn,
   unComputed,
+  unEffect,
   unSignal,
 } from 'unuse';
 
@@ -47,7 +48,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>(value.current);
 
     useReactEffect(() => {
-      result.set(value.current);
+      result.set(value.current as any);
     }, [value]);
 
     return result;
@@ -56,10 +57,10 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>(value[0] as T);
 
     useReactEffect(() => {
-      result.set(value[0] as T);
+      result.set(value[0] as any);
     });
 
-    effect(() => {
+    unEffect(() => {
       if (value[0] !== result.get()) {
         value[1](() => result.get());
       }
@@ -136,11 +137,11 @@ function unResolve<
     if (!readonly) {
       useReactEffect(() => {
         const value = state[0];
-        signal.set(value);
+        signal.set(value as any);
       });
     }
 
-    effect(() => {
+    unEffect(() => {
       const newValue = signal.get();
 
       if (state[0] === newValue) {

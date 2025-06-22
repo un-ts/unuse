@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import-x/export */
 import type {
   Signal as AngularSignal,
@@ -8,7 +9,6 @@ import {
   signal as angularSignal,
   isSignal as isAngularSignal,
 } from '@angular/core';
-import { effect } from 'alien-signals';
 import type {
   MaybeUnRef,
   SupportedFramework,
@@ -21,6 +21,7 @@ import {
   overrideTryOnScopeDisposeFn,
   overrideUnResolveFn,
   unComputed,
+  unEffect,
   unSignal,
 } from 'unuse';
 
@@ -48,11 +49,11 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>((value as AngularSignal<T>)());
 
     angularEffect(() => {
-      result.set((value as AngularSignal<T>)());
+      result.set((value as AngularSignal<any>)());
     });
 
     if ('set' in value) {
-      effect(() => {
+      unEffect(() => {
         value.set(result.get());
       });
     }
@@ -124,7 +125,7 @@ function unResolve<
       // TODO @Shinigami92 2025-06-20: Looks like Angular does not get the same instance and therefore it is not the same signal
       const state = angularSignal(signal.get());
 
-      effect(() => state.set(signal.get()));
+      unEffect(() => state.set(signal.get()));
 
       if (!readonly) {
         // HACK @Shinigami92 2025-06-20: This is horrible dangerously unsafe, but currently works 👀
@@ -132,7 +133,7 @@ function unResolve<
 
         state.set = (value) => {
           originalSet(value);
-          signal.set(value);
+          signal.set(value as any);
         };
 
         const originalUpdate = state.update;
@@ -140,7 +141,7 @@ function unResolve<
         state.update = (updater) => {
           const result = updater(signal.get());
           originalUpdate(() => result);
-          signal.set(result);
+          signal.set(result as any);
         };
       }
 

@@ -1,4 +1,4 @@
-import { computed } from 'alien-signals';
+import { computed } from '../alien-signals';
 
 export const UN_COMPUTED = Symbol('UN_COMPUTED');
 
@@ -12,9 +12,7 @@ export function unComputed<T>(callback: () => T): UnComputed<T> {
 
   return {
     [UN_COMPUTED]: true,
-    get() {
-      return value();
-    },
+    get: value,
   };
 }
 
