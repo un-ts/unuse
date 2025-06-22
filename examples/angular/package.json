@@ -6,6 +6,7 @@
     "ng": "ng",
     "dev": "ng serve",
     "build": "ng build",
+    "test:playwright": "playwright test",
     "ts-check": "tsc"
   },
   "private": true,

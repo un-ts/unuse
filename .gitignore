@@ -94,3 +94,9 @@ REVISION
 .yarn/
 package-lock.json
 yarn.lock
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
