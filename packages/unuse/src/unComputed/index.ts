@@ -16,7 +16,7 @@ export const UN_COMPUTED = Symbol('UN_COMPUTED');
  */
 export interface UnComputed<T> {
   readonly [UN_COMPUTED]: true;
-  /**#
+  /**
    * Retrieves the current value of the computed.
    */
   get(): T;
