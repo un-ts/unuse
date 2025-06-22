@@ -30,7 +30,8 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
       state(value);
     },
     update: (updater) => {
-      state(updater(internalValue));
+      internalValue = updater(internalValue);
+      state(internalValue);
     },
   };
 }
