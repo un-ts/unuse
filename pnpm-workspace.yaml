@@ -1,3 +1,10 @@
 packages:
-  - 'examples/*'
-  - 'packages/*'
+  - examples/*
+  - packages/*
+
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - esbuild
+  - lmdb
+  - msgpackr-extract
+  - unrs-resolver
