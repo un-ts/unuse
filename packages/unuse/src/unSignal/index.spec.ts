@@ -36,6 +36,12 @@ describe('unSignal', () => {
     expect(mySignal.get()).toBe(100);
   });
 
+  it('should update based on previous value', () => {
+    const mySignal = unSignal(42);
+    mySignal.update((prev) => prev + 10);
+    expect(mySignal.get()).toBe(52);
+  });
+
   describe('isUnSignal', () => {
     it('should return true for an UnSignal', () => {
       const mySignal = unSignal(42);
@@ -66,9 +72,17 @@ describe('unSignal', () => {
 
     it('should return false for an object with UN_SIGNAL but not true', () => {
       const obj = {
-        [Symbol('UN_SIGNAL')]: false,
+        [UN_SIGNAL]: false,
         get: () => 42,
         set: () => {},
+        update: () => {},
+      };
+      expect(isUnSignal(obj)).toBe(false);
+    });
+
+    it('should return false for an object with UN_SIGNAL but missing functions', () => {
+      const obj = {
+        [UN_SIGNAL]: true,
       };
       expect(isUnSignal(obj)).toBe(false);
     });
@@ -78,6 +92,7 @@ describe('unSignal', () => {
         [UN_SIGNAL]: true,
         get: () => 42,
         set: () => {},
+        update: () => {},
       };
       expect(isUnSignal(obj)).toBe(true);
     });

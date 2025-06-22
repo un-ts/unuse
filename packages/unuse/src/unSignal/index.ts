@@ -6,6 +6,7 @@ export interface UnSignal<T> {
   readonly [UN_SIGNAL]: true;
   get(): T;
   set(value: T): void;
+  update(updater: (prev: T) => T): void;
 }
 
 export function unSignal<T>(initialValue: T): UnSignal<T>;
@@ -18,12 +19,18 @@ export function unSignal<T = undefined>(): UnSignal<T | undefined>;
  * @returns An `UnSignal` object that has a `get` method to retrieve the current value and a `set` method to update the value.
  */
 export function unSignal<T>(initialValue?: T): UnSignal<T> {
+  let internalValue = initialValue as T;
   const state = signal(initialValue);
+
   return {
     [UN_SIGNAL]: true,
     get: () => state() as T,
     set: (value) => {
+      internalValue = value;
       state(value);
+    },
+    update: (updater) => {
+      state(updater(internalValue));
     },
   };
 }
@@ -33,6 +40,9 @@ export function isUnSignal<T>(value: unknown): value is UnSignal<T> {
     !!value &&
     typeof value === 'object' &&
     UN_SIGNAL in value &&
-    value[UN_SIGNAL] === true
+    value[UN_SIGNAL] === true &&
+    typeof (value as UnSignal<T>).get === 'function' &&
+    typeof (value as UnSignal<T>).set === 'function' &&
+    typeof (value as UnSignal<T>).update === 'function'
   );
 }
