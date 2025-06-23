@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-// @see https://github.com/stackblitz/alien-signals/blob/9c8a692d4e0aadff84834d11c466d72f6b2a1810/src/index.ts#L1
+// @see https://github.com/stackblitz/alien-signals/blob/v2.0.5/src/index.ts
 
 import type { ReactiveFlags, ReactiveNode } from 'alien-signals';
 import { createReactiveSystem } from 'alien-signals';
