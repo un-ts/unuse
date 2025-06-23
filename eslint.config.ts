@@ -18,8 +18,8 @@ export default defineConfig(
   {
     name: 'ignored files',
     ignores: [
-      // TODO @Shinigami92 2025-06-20: There is an issue right now with src files in angular project not detecting the <root>/tsconfig.json
-      'examples/angular/src/**/*.ts',
+      // TODO @Shinigami92 2025-06-20: Angular example has its own tsconfig and it is too cumbersome right now to make it work
+      'examples/angular/**/*.ts',
     ],
   },
   {
@@ -281,7 +281,83 @@ export default defineConfig(
                             return null;
                           }
 
-                          return fixer.removeRange(param.typeAnnotation.range);
+                          if (
+                            node.parent.type === 'VariableDeclarator' &&
+                            !node.parent.id.typeAnnotation
+                          ) {
+                            const variableDeclarationNode = node.parent;
+
+                            const isAsyncFunction: boolean = node.async;
+
+                            const isBodyBlockStatement =
+                              node.body.type === 'BlockStatement';
+
+                            const hasReturnType = node.returnType !== undefined;
+
+                            const lastParam = node.params.at(-1);
+
+                            const paramIdDifferentLine =
+                              lastParam.loc.start.line !==
+                              variableDeclarationNode.id.loc.end.line;
+
+                            const paramBlockDifferentLine =
+                              lastParam.loc.end.line !==
+                              node.body.loc.start.line;
+
+                            const behindClosingParenthesis = hasReturnType
+                              ? (node.returnType.range[1] as number)
+                              : (lastParam.range[1] as number) + ')'.length;
+
+                            const fixes = [
+                              // Removes `=> `
+                              fixer.replaceTextRange(
+                                [
+                                  behindClosingParenthesis,
+                                  node.body.range[0] as number,
+                                ],
+                                !hasReturnType &&
+                                  paramBlockDifferentLine &&
+                                  paramIdDifferentLine
+                                  ? ')'
+                                  : ''
+                              ),
+                              // Removes ` = ` or ` = async `
+                              fixer.replaceTextRange(
+                                [
+                                  variableDeclarationNode.id.range[1] as number,
+                                  (variableDeclarationNode.init
+                                    .range[0] as number) +
+                                    (isAsyncFunction ? 'async '.length : 0),
+                                ],
+                                ''
+                              ),
+                              // Replaces `const ` with `function ` or `async function `
+                              fixer.replaceTextRange(
+                                [
+                                  variableDeclarationNode.parent
+                                    .range[0] as number,
+                                  variableDeclarationNode.range[0] as number,
+                                ],
+                                isAsyncFunction
+                                  ? 'async function '
+                                  : 'function '
+                              ),
+                            ];
+
+                            // If the body is not a BlockStatement, we need to wrap it in curly braces
+                            if (!isBodyBlockStatement) {
+                              fixes.push(
+                                fixer.insertTextBefore(node.body, '{return '),
+                                fixer.insertTextAfter(node.body, '}')
+                              );
+                            }
+
+                            return fixes;
+                          }
+
+                          return fixer.removeRange(
+                            param.typeAnnotation.range as [number, number]
+                          );
                         },
                         suggest: [
                           {
@@ -289,8 +365,8 @@ export default defineConfig(
                             fix(fixer) {
                               if (param.optional) {
                                 return fixer.removeRange([
-                                  param.typeAnnotation.range[0] - 1, // Remove the `?` before the type annotation
-                                  param.typeAnnotation.range[1],
+                                  (param.typeAnnotation.range[0] as number) - 1, // Remove the `?` before the type annotation
+                                  param.typeAnnotation.range[1] as number,
                                 ]);
                               }
 
