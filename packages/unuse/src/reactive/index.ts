@@ -236,7 +236,8 @@ export function isUnComputed<T = any>(r: any): r is UnComputed<T> {
 }
 //#endregion
 
-export function effect(fn: () => void): () => void {
+//#region unEffect
+export function unEffect(fn: () => void): () => void {
   const e: Effect = {
     fn,
     subs: undefined,
@@ -261,7 +262,7 @@ export function effect(fn: () => void): () => void {
   return effectOper.bind(e);
 }
 
-export function effectScope(fn: () => void): () => void {
+export function unEffectScope(fn: () => void): () => void {
   const e: EffectScope = {
     deps: undefined,
     depsTail: undefined,
@@ -284,6 +285,7 @@ export function effectScope(fn: () => void): () => void {
 
   return effectOper.bind(e);
 }
+//#endregion
 
 function updateComputed(c: Computed): boolean {
   const prevSub = setCurrentSub(c);

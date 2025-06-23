@@ -1,1 +1,1 @@
-export { effect as unEffect, effectScope as unEffectScope } from '../reactive';
+export { unEffect, unEffectScope } from '../reactive';
