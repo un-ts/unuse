@@ -12,7 +12,7 @@ export default defineConfig({
     ? [['list'], ['github']]
     : [['html', { open: 'never' }], ['list']],
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:6002',
     trace: 'on-first-retry',
   },
   projects: [
@@ -22,8 +22,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm run dev',
-    url: 'http://localhost:5173',
+    command: 'pnpm run dev --port 6002',
+    url: 'http://localhost:6002',
     reuseExistingServer: !IS_CI,
   },
 });

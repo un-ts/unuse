@@ -13,7 +13,7 @@
     "example:vue": "pnpm --filter vue-example run dev",
     "ts-check": "tsc && pnpm -r ts-check",
     "test": "vitest",
-    "test:playwright": "run-s test:playwright:*",
+    "test:playwright": "pnpm -r test:playwright",
     "test:playwright:angular": "pnpm --filter angular-example test:playwright",
     "test:playwright:react": "pnpm --filter react-example test:playwright",
     "test:playwright:solid": "pnpm --filter solid-example test:playwright",
