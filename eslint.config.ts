@@ -18,8 +18,8 @@ export default defineConfig(
   {
     name: 'ignored files',
     ignores: [
-      // TODO @Shinigami92 2025-06-20: There is an issue right now with src files in angular project not detecting the <root>/tsconfig.json
-      'examples/angular/src/**/*.ts',
+      // TODO @Shinigami92 2025-06-20: Angular example has its own tsconfig and it is too cumbersome right now to make it work
+      'examples/angular/**/*.ts',
     ],
   },
   {
