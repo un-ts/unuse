@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import-x/export */
 import type {
   MaybeUnRef,
@@ -51,7 +50,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     vueWatch(
       value,
       (newValue) => {
-        result.set(newValue as any);
+        result.set(newValue);
       },
       { flush: 'sync' }
     );

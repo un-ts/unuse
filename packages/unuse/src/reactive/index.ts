@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/unified-signatures */
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 /* eslint-disable @typescript-eslint/naming-convention */
+
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -112,16 +111,10 @@ export function endBatch(): void {
 
 export type Accessor<T> = () => T;
 
-export type Setter<in out T> = {
-  <U extends T>(
-    ...args: undefined extends T
-      ? []
-      : [value: Exclude<U, Function> | ((prev: T) => U)]
-  ): undefined extends T ? undefined : U;
+export type Updater<in out T> = {
   <U extends T>(value: (prev: T) => U): U;
-  <U extends T>(value: Exclude<U, Function>): U;
-  <U extends T>(value: Exclude<U, Function> | ((prev: T) => U)): U;
 };
+export type Setter<T> = (value: T) => void;
 
 /**
  * A unique symbol used to identify `UnSignal` objects.
@@ -141,7 +134,12 @@ export interface UnSignal<T> {
   /**
    * Sets a new value for the signal.
    */
-  set: Setter<T>;
+  set(value: T): void;
+
+  /**
+   * Updates the signal based on the previous value.
+   */
+  update: Updater<T>;
 
   /**
    * Peek.
@@ -160,27 +158,21 @@ export function unSignal<T>(initialValue?: T): UnSignal<T | undefined> {
     flags: 1 satisfies ReactiveFlags.Mutable,
   } as Signal<T>;
 
-  return {
-    [UN_SIGNAL]: true,
-    set(value?: unknown) {
-      if (typeof value === 'function') {
-        value = value(state.value);
-      }
-
-      if (state.value !== (state.value = value as T)) {
-        state.flags = 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty;
-        const subs = state.subs;
-        if (subs !== undefined) {
-          propagate(subs);
-          if (!batchDepth) {
-            flush();
-          }
+  const setter: Setter<T> = (newValue) => {
+    if (state.value !== (state.value = newValue)) {
+      state.flags = 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty;
+      const subs = state.subs;
+      if (subs !== undefined) {
+        propagate(subs);
+        if (!batchDepth) {
+          flush();
         }
       }
+    }
+  };
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return state.value as any;
-    },
+  return {
+    [UN_SIGNAL]: true,
     get() {
       const value = state.value;
       if (
@@ -202,26 +194,49 @@ export function unSignal<T>(initialValue?: T): UnSignal<T | undefined> {
     peek(): T {
       return state.value;
     },
+    set: setter,
+    update(cb) {
+      setter(cb(state.value) as T);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return state.value as any;
+    },
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function isUnSignal(r: any): r is UnSignal<any> {
+export function isUnSignal<T>(r: any): r is UnSignal<T> {
   return r ? r[UN_SIGNAL] === true : false;
 }
 //#endregion
 
-export function computed<T>(getter: (previousValue?: T) => T): () => T {
-  return computedOper.bind({
-    value: undefined,
-    subs: undefined,
-    subsTail: undefined,
-    deps: undefined,
-    depsTail: undefined,
-    flags: 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty,
-    getter: getter as (previousValue?: unknown) => unknown,
-  }) as () => T;
+//#region UnComputed
+export const UN_COMPUTED = Symbol('UN_COMPUTED');
+
+export interface UnComputed<T> {
+  readonly [UN_COMPUTED]: true;
+  get(): T;
 }
+
+export function unComputed<T>(getter: (previousValue?: T) => T): UnComputed<T> {
+  return {
+    [UN_COMPUTED]: true,
+    get: computedOper.bind({
+      value: undefined,
+      subs: undefined,
+      subsTail: undefined,
+      deps: undefined,
+      depsTail: undefined,
+      flags: 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty,
+      getter: getter as (previousValue?: unknown) => unknown,
+    }) as () => T,
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function isUnComputed<T = any>(r: any): r is UnComputed<T> {
+  return r ? r[UN_COMPUTED] === true : false;
+}
+//#endregion
 
 export function effect(fn: () => void): () => void {
   const e: Effect = {
