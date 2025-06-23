@@ -4,8 +4,6 @@ export default defineConfig({
   title: 'unuse',
   description: 'Documentation Website for unuse',
 
-  base: process.env.NODE_ENV === 'production' ? '/unuse/' : '/',
-
   themeConfig: {
     nav: [{ text: 'Home', link: '/' }],
 
