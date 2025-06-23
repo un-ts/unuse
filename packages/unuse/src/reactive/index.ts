@@ -109,12 +109,7 @@ export function endBatch(): void {
 //#region UnSignal
 // @see https://github.com/solidjs/solid/blob/3d3207dd3aeb84c2a38377cf9f3b895995c2d969/packages/solid/src/reactive/signal.ts#L189
 
-export type Accessor<T> = () => T;
-
-export type Updater<in out T> = {
-  <U extends T>(value: (prev: T) => U): U;
-};
-export type Setter<T> = (value: T) => void;
+type Setter<T> = (value: T) => void;
 
 /**
  * A unique symbol used to identify `UnSignal` objects.
@@ -129,7 +124,7 @@ export interface UnSignal<T> {
   /**
    * Retrieves the current value of the signal.
    */
-  get: Accessor<T>;
+  get(): T;
 
   /**
    * Sets a new value for the signal.
@@ -139,12 +134,12 @@ export interface UnSignal<T> {
   /**
    * Updates the signal based on the previous value.
    */
-  update: Updater<T>;
+  update: <U extends T>(value: (prev: T) => U) => U;
 
   /**
    * Peek.
    */
-  peek: Accessor<T>;
+  peek(): T;
 }
 
 export function unSignal<T>(): UnSignal<T | undefined>;
@@ -203,10 +198,13 @@ export function unSignal<T>(initialValue?: T): UnSignal<T | undefined> {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function isUnSignal<T>(r: any): r is UnSignal<T> {
-  return r ? r[UN_SIGNAL] === true : false;
+/**
+ * Checks if a value is an `UnSignal`.
+ */
+export function isUnSignal<T>(r: unknown): r is UnSignal<T> {
+  return r ? (r as any)[UN_SIGNAL] === true : false;
 }
+
 //#endregion
 
 //#region UnComputed
