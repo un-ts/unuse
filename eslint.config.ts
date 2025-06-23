@@ -20,7 +20,6 @@ export default defineConfig(
     ignores: [
       // TODO @Shinigami92 2025-06-20: There is an issue right now with src files in angular project not detecting the <root>/tsconfig.json
       'examples/angular/src/**/*.ts',
-      'docs/.vitepress/config.ts',
     ],
   },
   {
