@@ -48,7 +48,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>(value.current);
 
     useReactEffect(() => {
-      result.set(value.current as any);
+      result.set(value.current);
     }, [value]);
 
     return result;
@@ -57,7 +57,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>(value[0] as T);
 
     useReactEffect(() => {
-      result.set(value[0] as any);
+      result.set(value[0] as T);
     });
 
     unEffect(() => {

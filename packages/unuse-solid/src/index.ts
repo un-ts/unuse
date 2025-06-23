@@ -65,7 +65,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>(accessor());
 
     createSolidEffect(() => {
-      result.set(accessor() as any);
+      result.set(accessor());
     });
 
     unEffect(() => {
@@ -139,7 +139,7 @@ function unResolve<
     if (!readonly) {
       createSolidEffect(() => {
         const value = state[0]();
-        signal.set(value as any);
+        signal.set(value);
       });
     }
 

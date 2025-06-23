@@ -133,7 +133,7 @@ function unResolve<
 
         state.set = (value) => {
           originalSet(value);
-          signal.set(value as any);
+          signal.set(value);
         };
 
         const originalUpdate = state.update;
@@ -141,7 +141,7 @@ function unResolve<
         state.update = (updater) => {
           const result = updater(signal.get());
           originalUpdate(() => result);
-          signal.set(result as any);
+          signal.set(result);
         };
       }
 
