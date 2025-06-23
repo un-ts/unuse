@@ -6,6 +6,7 @@
     "build": "vite build",
     "dev": "vite",
     "preview": "vite preview",
+    "test:playwright": "playwright test",
     "ts-check": "vue-tsc"
   },
   "private": true,
