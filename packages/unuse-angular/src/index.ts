@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import-x/export */
 import type {
   Signal as AngularSignal,
@@ -49,7 +48,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     const result = unSignal<T>((value as AngularSignal<T>)());
 
     angularEffect(() => {
-      result.set((value as AngularSignal<any>)());
+      result.set((value as AngularSignal<T>)());
     });
 
     if ('set' in value) {
