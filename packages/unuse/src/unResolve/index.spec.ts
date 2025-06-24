@@ -12,7 +12,7 @@ describe('unResolve', () => {
     it('should resolve to an UnSignal', () => {
       const mySignal = unSignal(0);
 
-      const actual = unResolve(mySignal, { framework: undefined });
+      const actual = unResolve(mySignal, { framework: 'none' });
 
       expect(actual).toSatisfy(isUnSignal);
     });
@@ -20,7 +20,7 @@ describe('unResolve', () => {
     it('should update the UnSignal on change', () => {
       const mySignal = unSignal(0);
 
-      const actual = unResolve(mySignal, { framework: undefined });
+      const actual = unResolve(mySignal, { framework: 'none' });
 
       expect(actual.get()).toBe(0);
 
@@ -31,7 +31,7 @@ describe('unResolve', () => {
     it('should update back the original signal on change', () => {
       const mySignal = unSignal(0);
 
-      const actual = unResolve(mySignal, { framework: undefined });
+      const actual = unResolve(mySignal, { framework: 'none' });
 
       actual.set(100);
       expect(mySignal.get()).toBe(100);
@@ -41,7 +41,7 @@ describe('unResolve', () => {
       const mySignal = unSignal(0);
 
       const actual = unResolve(mySignal, {
-        framework: undefined,
+        framework: 'none',
         readonly: true,
       });
       expect(actual).toSatisfy(isUnComputed);

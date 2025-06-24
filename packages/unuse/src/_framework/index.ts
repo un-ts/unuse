@@ -1,4 +1,4 @@
-export type SupportedFramework = 'angular' | 'react' | 'solid' | 'vue';
+export type SupportedFramework = 'angular' | 'react' | 'solid' | 'vue' | 'none';
 
 let Angular: typeof import('@angular/core') | undefined;
 let React: typeof import('react') | undefined;
@@ -8,7 +8,7 @@ let Vue: typeof import('vue') | undefined;
 // HACK @Shinigami92 2025-06-16: https://github.com/tc39/proposal-import-sync
 
 export async function initFrameworkImport(
-  framework: SupportedFramework
+  framework: Exclude<SupportedFramework, 'none'>
 ): Promise<void> {
   switch (framework) {
     case 'angular': {
@@ -48,18 +48,19 @@ export async function initFrameworkImport(
   throw new Error(`Unsupported framework: ${framework}`);
 }
 
-export type ImportedFrameworkReturn<TFramework extends SupportedFramework> =
-  TFramework extends 'angular'
-    ? typeof import('@angular/core')
-    : TFramework extends 'react'
-      ? typeof import('react')
-      : TFramework extends 'solid'
-        ? typeof import('solid-js')
-        : typeof import('vue');
+export type ImportedFrameworkReturn<
+  TFramework extends Exclude<SupportedFramework, 'none'>,
+> = TFramework extends 'angular'
+  ? typeof import('@angular/core')
+  : TFramework extends 'react'
+    ? typeof import('react')
+    : TFramework extends 'solid'
+      ? typeof import('solid-js')
+      : typeof import('vue');
 
-export function importedFramework<TFramework extends SupportedFramework>(
-  framework: TFramework
-): ImportedFrameworkReturn<TFramework> {
+export function importedFramework<
+  TFramework extends Exclude<SupportedFramework, 'none'>,
+>(framework: TFramework): ImportedFrameworkReturn<TFramework> {
   switch (framework) {
     case 'angular': {
       if (!Angular) {

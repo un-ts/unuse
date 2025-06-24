@@ -68,55 +68,56 @@ export function isUnRef<T>(value: unknown): value is UnRef<T> {
     return REGISTRY.isUnRefOverride(value);
   }
 
-  const framework = globalThis.__UNUSE_FRAMEWORK__ as
-    | SupportedFramework
-    | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const framework = (globalThis.__UNUSE_FRAMEWORK__ ||
+    'none') as SupportedFramework;
+  switch (framework) {
+    case 'angular': {
+      const Angular = importedFramework('angular');
 
-  if (framework) {
-    switch (framework) {
-      case 'angular': {
-        const Angular = importedFramework('angular');
-
-        if (Angular.isSignal(value)) {
-          return true;
-        }
-
-        break;
+      if (Angular.isSignal(value)) {
+        return true;
       }
 
-      case 'react': {
-        if (typeof value === 'object' && 'current' in value) {
-          return true;
-        }
+      break;
+    }
 
-        if (Array.isArray(value) && value.length > 0) {
-          return true;
-        }
-
-        break;
+    case 'react': {
+      if (typeof value === 'object' && 'current' in value) {
+        return true;
       }
 
-      case 'solid': {
-        if (typeof value === 'function') {
-          return true;
-        }
-
-        if (Array.isArray(value) && value.length > 0) {
-          return true;
-        }
-
-        break;
+      if (Array.isArray(value) && value.length > 0) {
+        return true;
       }
 
-      case 'vue': {
-        const Vue = importedFramework('vue');
+      break;
+    }
 
-        if (Vue.isRef(value)) {
-          return true;
-        }
-
-        break;
+    case 'solid': {
+      if (typeof value === 'function') {
+        return true;
       }
+
+      if (Array.isArray(value) && value.length > 0) {
+        return true;
+      }
+
+      break;
+    }
+
+    case 'vue': {
+      const Vue = importedFramework('vue');
+
+      if (Vue.isRef(value)) {
+        return true;
+      }
+
+      break;
+    }
+
+    case 'none': {
+      break;
     }
   }
 
