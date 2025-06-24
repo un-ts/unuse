@@ -16,9 +16,7 @@ import { unComputed } from '../unComputed';
 import type { UnSignal } from '../unSignal';
 
 export interface UnResolveOptions<
-  TFramework extends
-    | SupportedFramework
-    | undefined = typeof globalThis.__UNUSE_FRAMEWORK__,
+  TFramework extends SupportedFramework = typeof globalThis.__UNUSE_FRAMEWORK__,
   TReadonly extends boolean = false,
 > {
   /**
@@ -33,9 +31,7 @@ export interface UnResolveOptions<
 
 export type ReadonlyUnResolveReturn<
   T,
-  TFramework extends
-    | SupportedFramework
-    | undefined = typeof globalThis.__UNUSE_FRAMEWORK__,
+  TFramework extends SupportedFramework = typeof globalThis.__UNUSE_FRAMEWORK__,
 > = TFramework extends 'angular'
   ? AngularSignal<T>
   : TFramework extends 'react'
@@ -48,9 +44,7 @@ export type ReadonlyUnResolveReturn<
 
 export type WritableUnResolveReturn<
   T,
-  TFramework extends
-    | SupportedFramework
-    | undefined = typeof globalThis.__UNUSE_FRAMEWORK__,
+  TFramework extends SupportedFramework = typeof globalThis.__UNUSE_FRAMEWORK__,
 > = TFramework extends 'angular'
   ? AngularWritableSignal<T>
   : TFramework extends 'react'
@@ -63,9 +57,7 @@ export type WritableUnResolveReturn<
 
 export type UnResolveReturn<
   T,
-  TFramework extends
-    | SupportedFramework
-    | undefined = typeof globalThis.__UNUSE_FRAMEWORK__,
+  TFramework extends SupportedFramework = typeof globalThis.__UNUSE_FRAMEWORK__,
   TReadonly extends boolean = false,
 > = TReadonly extends true
   ? ReadonlyUnResolveReturn<T, TFramework>
@@ -93,9 +85,7 @@ export function overrideUnResolveFn(fn: typeof unResolve): void {
  */
 export function unResolve<
   T,
-  TFramework extends
-    | SupportedFramework
-    | undefined = typeof globalThis.__UNUSE_FRAMEWORK__,
+  TFramework extends SupportedFramework = typeof globalThis.__UNUSE_FRAMEWORK__,
   TReadonly extends boolean = false,
 >(
   signal: UnSignal<T>,
@@ -106,9 +96,9 @@ export function unResolve<
   }
 
   const {
-    framework = globalThis.__UNUSE_FRAMEWORK__ as
-      | SupportedFramework
-      | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    framework = (globalThis.__UNUSE_FRAMEWORK__ ||
+      'none') as SupportedFramework,
     readonly = false as boolean,
   } = options;
 

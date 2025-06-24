@@ -44,11 +44,10 @@ export function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
     return REGISTRY.toUnSignalOverride(value);
   }
 
-  const framework = globalThis.__UNUSE_FRAMEWORK__ as
-    | SupportedFramework
-    | undefined;
-
-  if (!framework) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const framework = (globalThis.__UNUSE_FRAMEWORK__ ||
+    'none') as SupportedFramework;
+  if (framework === 'none') {
     return unSignal(value) as UnSignal<T>;
   }
 

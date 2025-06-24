@@ -24,10 +24,9 @@ export function unRefElement<T extends MaybeElement>(
 ): UnRefElementReturn<T> {
   const plain = unAccess(elementRef);
 
-  const framework = globalThis.__UNUSE_FRAMEWORK__ as
-    | SupportedFramework
-    | undefined;
-
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const framework = (globalThis.__UNUSE_FRAMEWORK__ ||
+    'none') as SupportedFramework;
   if (framework === 'vue') {
     // @ts-expect-error: eat it
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-unsafe-return
