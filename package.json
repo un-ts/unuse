@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Monorepo for unuse packages",
   "scripts": {
-    "clean": "git clean -fdx",
+    "clean": "tsx scripts/clean.ts",
     "build": "pnpm -r build",
     "format": "prettier --cache --write .",
     "lint": "eslint --cache --cache-strategy content .",
@@ -66,6 +66,7 @@
     "prettier-plugin-pkg": "0.21.1",
     "publint": "0.3.12",
     "tsdown": "0.12.8",
+    "tsx": "^4.20.3",
     "typescript": "5.8.3",
     "typescript-eslint": "8.34.1",
     "unplugin-unused": "0.5.1",
