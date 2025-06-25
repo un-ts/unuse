@@ -7,9 +7,10 @@
     }
   ],
   "commit": false,
+  "fixed": [["unuse", "unuse-*"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["*-example"]
+  "ignore": ["*-docs", "*-example"]
 }
