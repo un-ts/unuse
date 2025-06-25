@@ -16,6 +16,8 @@ import type {
   UnSignal,
 } from 'unuse';
 import {
+  isUnComputed,
+  isUnSignal,
   overrideIsUnRefFn,
   overrideToUnSignalFn,
   overrideTryOnScopeDisposeFn,
@@ -181,11 +183,13 @@ export type UnRef<T> =
   | (() => T);
 
 function isUnRef<T>(value: unknown): value is UnRef<T> {
-  if (isAngularSignal(value)) {
-    return true;
-  }
-
-  return false;
+  return (
+    isAngularSignal(value) ||
+    // getter
+    typeof value === 'function' ||
+    isUnSignal(value) ||
+    isUnComputed(value)
+  );
 }
 
 overrideToUnSignalFn(toUnSignal);
@@ -194,4 +198,17 @@ overrideUnResolveFn(unResolve);
 overrideTryOnScopeDisposeFn(tryOnScopeDispose);
 overrideIsUnRefFn(isUnRef);
 
-export { isUnRef, toUnSignal, tryOnScopeDispose, unResolve };
+// Above we export everything from 'unuse'.
+// So here we export some internal functions as undefined to make it inaccessible from the public API.
+const UNDEFINED = undefined;
+
+export {
+  isUnRef,
+  UNDEFINED as overrideIsUnRefFn,
+  UNDEFINED as overrideToUnSignalFn,
+  UNDEFINED as overrideTryOnScopeDisposeFn,
+  UNDEFINED as overrideUnResolveFn,
+  toUnSignal,
+  tryOnScopeDispose,
+  unResolve,
+};

@@ -14,6 +14,8 @@ import type {
   UnSignal,
 } from 'unuse';
 import {
+  isUnComputed,
+  isUnSignal,
   overrideIsUnRefFn,
   overrideToUnSignalFn,
   overrideTryOnScopeDisposeFn,
@@ -172,7 +174,7 @@ function tryOnScopeDispose(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   fn: () => void
 ): boolean {
-  // React does not have a direct equivalent to onScopeDispose,
+  // React does not have a direct equivalent to onScopeDispose
   return false;
 }
 
@@ -187,15 +189,16 @@ export type UnRef<T> =
   | (() => T);
 
 function isUnRef<T>(value: unknown): value is UnRef<T> {
-  if (value !== null && typeof value === 'object' && 'current' in value) {
-    return true;
-  }
-
-  if (Array.isArray(value) && value.length > 0) {
-    return true;
-  }
-
-  return false;
+  return (
+    // ref
+    (value !== null && typeof value === 'object' && 'current' in value) ||
+    // state
+    (Array.isArray(value) && value.length > 0) ||
+    // getter
+    typeof value === 'function' ||
+    isUnSignal(value) ||
+    isUnComputed(value)
+  );
 }
 
 overrideToUnSignalFn(toUnSignal);
@@ -205,4 +208,17 @@ overrideTryOnScopeDisposeFn(tryOnScopeDispose);
 // @ts-expect-error: just do it
 overrideIsUnRefFn(isUnRef);
 
-export { isUnRef, toUnSignal, tryOnScopeDispose, unResolve };
+// Above we export everything from 'unuse'.
+// So here we export some internal functions as undefined to make it inaccessible from the public API.
+const UNDEFINED = undefined;
+
+export {
+  isUnRef,
+  UNDEFINED as overrideIsUnRefFn,
+  UNDEFINED as overrideToUnSignalFn,
+  UNDEFINED as overrideTryOnScopeDisposeFn,
+  UNDEFINED as overrideUnResolveFn,
+  toUnSignal,
+  tryOnScopeDispose,
+  unResolve,
+};

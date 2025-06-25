@@ -7,7 +7,12 @@ export default defineConfig({
       all: true,
       provider: 'v8',
       reporter: ['clover', 'cobertura', 'json-summary', 'json', 'lcov', 'text'],
-      exclude: ['examples', '**/*.config.ts'],
+      exclude: [
+        '**/dist/**',
+        '**/*.config.ts',
+        'docs/.vitepress/**',
+        'examples',
+      ],
       reportOnFailure: true,
       thresholds: {
         // TODO @Shinigami92 2025-06-22: should be:
@@ -17,10 +22,10 @@ export default defineConfig({
         // branches: 85,
 
         // for now:
-        lines: 40,
-        statements: 40,
-        functions: 70,
-        branches: 70,
+        lines: 75,
+        statements: 75,
+        functions: 75,
+        branches: 80,
       },
     },
     reporters: process.env.CI

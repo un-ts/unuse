@@ -256,6 +256,10 @@ importers:
       unuse:
         specifier: workspace:*
         version: link:../unuse
+    devDependencies:
+      '@angular/platform-browser':
+        specifier: 20.0.4
+        version: 20.0.4(@angular/common@20.0.4(@angular/core@20.0.4(@angular/compiler@20.0.4)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.0.4(@angular/compiler@20.0.4)(rxjs@7.8.2))
 
   packages/unuse-react:
     dependencies:
@@ -269,6 +273,9 @@ importers:
         specifier: workspace:*
         version: link:../unuse
     devDependencies:
+      '@testing-library/react':
+        specifier: 16.3.0
+        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@types/react':
         specifier: 19.1.8
         version: 19.1.8
@@ -284,6 +291,10 @@ importers:
       unuse:
         specifier: workspace:*
         version: link:../unuse
+    devDependencies:
+      '@solidjs/testing-library':
+        specifier: 0.8.10
+        version: 0.8.10(solid-js@1.9.7)
 
   packages/unuse-vue:
     dependencies:
