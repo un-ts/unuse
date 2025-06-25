@@ -6,4 +6,4 @@
 'unuse': patch
 ---
 
-fix!: remove internal override functions from public API
+fix: remove internal override functions from public API

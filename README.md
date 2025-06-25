@@ -14,10 +14,10 @@ You can find the core package at [packages/unuse](https://github.com/un-ts/unuse
 
 Framework-specific adapters are available for:
 
-- [unuse-angular](https://github.com/un-ts/unuse/tree/main/packages/unuse-angular)  
+- [unuse-angular](https://github.com/un-ts/unuse/tree/main/packages/unuse-angular)
   Support for [Angular](https://angular.dev), using `@angular/core`.
 
-- [unuse-react](https://github.com/un-ts/unuse/tree/main/packages/unuse-react)  
+- [unuse-react](https://github.com/un-ts/unuse/tree/main/packages/unuse-react)
   Support for [React](https://react.dev), using `react`.
 
 - [unuse-solid](https://github.com/un-ts/unuse/tree/main/packages/unuse-solid)
