@@ -2,7 +2,6 @@ import type {
   Signal as AngularSignal,
   WritableSignal as AngularWritableSignal,
 } from '@angular/core';
-import { effect } from 'alien-signals';
 import type { useMemo as useReactMemo, useState as useReactState } from 'react';
 import type {
   Accessor as SolidAccessor,
@@ -13,6 +12,7 @@ import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
 import type { UnComputed } from '../unComputed';
 import { unComputed } from '../unComputed';
+import { unEffect } from '../unEffect';
 import type { UnSignal } from '../unSignal';
 
 export interface UnResolveOptions<
@@ -110,7 +110,7 @@ export function unResolve<
       // TODO @Shinigami92 2025-06-20: Looks like Angular does not get the same instance and therefore it is not the same signal
       const state = Angular.signal(signal.get());
 
-      effect(() => state.set(signal.get()));
+      unEffect(() => state.set(signal.get()));
 
       if (!readonly) {
         // HACK @Shinigami92 2025-06-20: This is horrible dangerously unsafe, but currently works 👀
@@ -159,7 +159,7 @@ export function unResolve<
         };
       }
 
-      effect(() => {
+      unEffect(() => {
         const newValue = signal.get();
 
         if (state[0] === newValue) {
@@ -203,7 +203,7 @@ export function unResolve<
         };
       }
 
-      effect(() => state[1](() => signal.get()));
+      unEffect(() => state[1](() => signal.get()));
 
       // @ts-expect-error: just do it
       return readonly ? state[0] : state;
@@ -214,7 +214,7 @@ export function unResolve<
 
       const state = Vue.ref(signal.get());
 
-      effect(() => (state.value = signal.get()));
+      unEffect(() => (state.value = signal.get()));
 
       if (!readonly) {
         Vue.watch(state, (newValue) => signal.set(newValue), { flush: 'sync' });

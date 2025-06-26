@@ -1,5 +1,4 @@
 /* eslint-disable import-x/export */
-import { effect } from 'alien-signals';
 import type {
   Accessor as SolidAccessor,
   Signal as SolidSignal,
@@ -24,6 +23,7 @@ import {
   overrideTryOnScopeDisposeFn,
   overrideUnResolveFn,
   unComputed,
+  unEffect,
   unSignal,
 } from 'unuse';
 
@@ -69,7 +69,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
       result.set(accessor());
     });
 
-    effect(() => {
+    unEffect(() => {
       value[1](() => result.get());
     });
 
@@ -144,7 +144,7 @@ function unResolve<
       });
     }
 
-    effect(() => state[1](() => signal.get()));
+    unEffect(() => state[1](() => signal.get()));
 
     // @ts-expect-error: just do it
     return readonly ? state[0] : state;
