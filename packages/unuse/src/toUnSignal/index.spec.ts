@@ -1,6 +1,6 @@
+import { unSignal } from 'unuse-reactivity';
 import { describe, expect, it } from 'vitest';
 import { toUnSignal } from '.';
-import { unSignal } from '../unSignal';
 
 describe('toUnSignal', () => {
   it('should be defined', () => {

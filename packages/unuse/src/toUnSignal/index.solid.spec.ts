@@ -1,8 +1,8 @@
 import { createSignal } from 'solid-js';
+import { isUnSignal } from 'unuse-reactivity';
 import { expect, it } from 'vitest';
 import { toUnSignal } from '.';
 import { describeSolid } from '../_testUtils/solid';
-import { isUnSignal } from '../unSignal';
 
 describeSolid('toUnSignal', () => {
   it('should convert a Solid signal to an UnSignal', () => {

@@ -2,10 +2,10 @@
 
 import { renderHook as renderReactHook } from '@testing-library/react';
 import { useState } from 'react';
+import { isUnSignal } from 'unuse-reactivity';
 import { expect, it } from 'vitest';
 import { toUnSignal } from '.';
 import { describeReact } from '../_testUtils/react';
-import { isUnSignal } from '../unSignal';
 
 describeReact('toUnSignal', () => {
   it('should convert a React state to an UnSignal', () => {

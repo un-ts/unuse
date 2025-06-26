@@ -4,5 +4,4 @@ export default defineConfig({
   exports: true,
   platform: 'neutral',
   publint: true,
-  noExternal: ['unuse-reactivity'],
 });

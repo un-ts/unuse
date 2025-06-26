@@ -7,13 +7,11 @@ import type {
   Accessor as SolidAccessor,
   Signal as SolidSignal,
 } from 'solid-js';
+import type { UnComputed, UnSignal } from 'unuse-reactivity';
+import { unComputed, unEffect } from 'unuse-reactivity';
 import type { ComputedRef as VueComputedRef, Ref as VueRef } from 'vue';
 import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
-import type { UnComputed } from '../unComputed';
-import { unComputed } from '../unComputed';
-import { unEffect } from '../unEffect';
-import type { UnSignal } from '../unSignal';
 
 export interface UnResolveOptions<
   TFramework extends SupportedFramework = typeof globalThis.__UNUSE_FRAMEWORK__,

@@ -219,6 +219,9 @@ importers:
       solid-js:
         specifier: '>=1.9'
         version: 1.9.7
+      unuse-reactivity:
+        specifier: workspace:*
+        version: link:../unuse-reactivity
       vue:
         specifier: '>=3.5'
         version: 3.5.17(typescript@5.8.3)
@@ -273,6 +276,12 @@ importers:
       '@types/react':
         specifier: 19.1.8
         version: 19.1.8
+
+  packages/unuse-reactivity:
+    dependencies:
+      alien-signals:
+        specifier: ^2.0.5
+        version: 2.0.5
 
   packages/unuse-solid:
     dependencies:

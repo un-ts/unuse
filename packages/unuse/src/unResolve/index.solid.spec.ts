@@ -1,8 +1,8 @@
 import { renderHook as renderSolidHook } from '@solidjs/testing-library';
+import { unSignal } from 'unuse-reactivity';
 import { expect, it } from 'vitest';
 import { unResolve } from '.';
 import { describeSolid } from '../_testUtils/solid';
-import { unSignal } from '../unSignal';
 
 describeSolid('unResolve', () => {
   it('should resolve to an Solid Signal', () => {

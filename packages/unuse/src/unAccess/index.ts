@@ -11,13 +11,11 @@ import type {
   Accessor as SolidAccessor,
   Signal as SolidSignal,
 } from 'solid-js';
+import type { UnComputed, UnSignal } from 'unuse-reactivity';
+import { isUnComputed, isUnSignal } from 'unuse-reactivity';
 import type { ComputedRef as VueComputedRef, Ref as VueRef } from 'vue';
 import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
-import type { UnComputed } from '../unComputed';
-import { isUnComputed } from '../unComputed';
-import type { UnSignal } from '../unSignal';
-import { isUnSignal } from '../unSignal';
 
 /**
  * UnRef represents any kind of reference or signal that can be dereferenced to get its value.

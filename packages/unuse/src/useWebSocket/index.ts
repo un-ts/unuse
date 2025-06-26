@@ -1,4 +1,5 @@
 /* eslint-disable unicorn/prefer-add-event-listener */
+import { unSignal, unWatch } from 'unuse-reactivity';
 import { IS_CLIENT } from '../isClient';
 import { IS_WORKER } from '../isWorker';
 import { toUnSignal } from '../toUnSignal';
@@ -7,8 +8,6 @@ import type { MaybeUnRef, UnRef } from '../unAccess';
 import { unAccess } from '../unAccess';
 import type { WritableUnResolveReturn } from '../unResolve';
 import { unResolve } from '../unResolve';
-import { unSignal } from '../unSignal';
-import { unWatch } from '../unWatch';
 import { useEventListener } from '../useEventListener';
 import { useIntervalFn } from '../useIntervalFn';
 

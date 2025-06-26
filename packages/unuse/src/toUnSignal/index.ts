@@ -1,12 +1,11 @@
 import type { Signal as AngularSignal } from '@angular/core';
 import type { Accessor as SolidAccessor } from 'solid-js';
+import type { UnSignal } from 'unuse-reactivity';
+import { isUnSignal, unEffect, unSignal } from 'unuse-reactivity';
 import type { Ref as VueRef } from 'vue';
 import type { SupportedFramework } from '../_framework';
 import { importedFramework } from '../_framework';
 import type { MaybeUnRef } from '../unAccess';
-import { unEffect } from '../unEffect';
-import type { UnSignal } from '../unSignal';
-import { isUnSignal, unSignal } from '../unSignal';
 
 const REGISTRY: {
   toUnSignalOverride?: typeof toUnSignal;
