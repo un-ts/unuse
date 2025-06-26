@@ -1,5 +1,4 @@
 /* eslint-disable import-x/export */
-import { effect } from 'alien-signals';
 import type {
   Dispatch as ReactDispatch,
   RefObject as ReactRefObject,
@@ -21,6 +20,7 @@ import {
   overrideTryOnScopeDisposeFn,
   overrideUnResolveFn,
   unComputed,
+  unEffect,
   unSignal,
 } from 'unuse';
 
@@ -61,7 +61,7 @@ function toUnSignal<T>(value: MaybeUnRef<T>): UnSignal<T> {
       result.set(value[0] as T);
     });
 
-    effect(() => {
+    unEffect(() => {
       if (value[0] !== result.get()) {
         value[1](() => result.get());
       }
@@ -142,7 +142,7 @@ function unResolve<
       });
     }
 
-    effect(() => {
+    unEffect(() => {
       const newValue = signal.get();
 
       if (state[0] === newValue) {
