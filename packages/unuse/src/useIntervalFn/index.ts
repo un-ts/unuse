@@ -1,3 +1,4 @@
+import { unSignal, unWatch } from 'unuse-reactivity';
 import { IS_CLIENT } from '../isClient';
 import { toUnSignal } from '../toUnSignal';
 import { tryOnScopeDispose } from '../tryOnScopeDispose';
@@ -5,8 +6,6 @@ import type { MaybeUnRef } from '../unAccess';
 import { isUnRef, unAccess } from '../unAccess';
 import type { ReadonlyUnResolveReturn } from '../unResolve';
 import { unResolve } from '../unResolve';
-import { unSignal } from '../unSignal';
-import { unWatch } from '../unWatch';
 
 export interface Pausable {
   /**

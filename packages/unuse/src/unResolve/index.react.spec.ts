@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 
 import { renderHook as renderReactHook } from '@testing-library/react';
+import { unSignal } from 'unuse-reactivity';
 import { expect, it } from 'vitest';
 import { unResolve } from '.';
 import { describeReact } from '../_testUtils/react';
-import { unSignal } from '../unSignal';
 
 describeReact('unResolve', () => {
   it('should resolve to a React Ref', () => {

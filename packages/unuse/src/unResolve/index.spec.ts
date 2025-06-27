@@ -1,7 +1,6 @@
+import { isUnComputed, isUnSignal, unSignal } from 'unuse-reactivity';
 import { describe, expect, it } from 'vitest';
 import { unResolve } from '.';
-import { isUnComputed } from '../unComputed';
-import { isUnSignal, unSignal } from '../unSignal';
 
 describe('unResolve', () => {
   it('should be defined', () => {

@@ -1,8 +1,8 @@
+import { isUnSignal } from 'unuse-reactivity';
 import { expect, it } from 'vitest';
 import { ref } from 'vue';
 import { toUnSignal } from '.';
 import { describeVue } from '../_testUtils/vue';
-import { isUnSignal } from '../unSignal';
 
 describeVue('toUnSignal', () => {
   it('should convert a Vue ref to an UnSignal', () => {

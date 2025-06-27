@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { unComputed, unWatch } from 'unuse-reactivity';
 import { IS_CLIENT } from '../isClient';
 import { isObject } from '../isObject';
 import { toArray } from '../toArray';
 import { tryOnScopeDispose } from '../tryOnScopeDispose';
 import type { MaybeUnRef } from '../unAccess';
 import { unAccess } from '../unAccess';
-import { unComputed } from '../unComputed';
 import { unRefElement } from '../unRefElement';
-import { unWatch } from '../unWatch';
 
 export const defaultWindow = IS_CLIENT
   ? // eslint-disable-next-line unicorn/prefer-global-this

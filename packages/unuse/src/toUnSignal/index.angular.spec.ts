@@ -6,11 +6,11 @@ import {
   BrowserTestingModule,
   platformBrowserTesting,
 } from '@angular/platform-browser/testing';
+import type { UnSignal } from 'unuse-reactivity';
+import { isUnSignal } from 'unuse-reactivity';
 import { beforeAll, expect, it, vi } from 'vitest';
 import { toUnSignal } from '.';
 import { describeAngular, ZonelessTestModule } from '../_testUtils/angular';
-import type { UnSignal } from '../unSignal';
-import { isUnSignal } from '../unSignal';
 
 describeAngular('toUnSignal', () => {
   beforeAll(() => {
