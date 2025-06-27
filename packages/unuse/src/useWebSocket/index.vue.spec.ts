@@ -33,7 +33,7 @@ describeVue('useWebSocket', () => {
     expect((vm.ref.status as unknown as Ref<WebSocketStatus>).value).toBe(
       'CONNECTING'
     );
-    expect(mockWebSocket).toBeCalledWith('ws://localhost', []);
+    expect(mockWebSocket).toHaveBeenCalledWith('ws://localhost', []);
     expect(vm.ref.close).toBeTypeOf('function');
     expect(vm.ref.send).toBeTypeOf('function');
     expect(vm.ref.open).toBeTypeOf('function');
