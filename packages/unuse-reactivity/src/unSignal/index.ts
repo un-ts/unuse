@@ -23,6 +23,11 @@ export interface UnSignal<T> {
   get(): T;
 
   /**
+   * Retrieves the current value of the signal without triggering effects.
+   */
+  peek(): T;
+
+  /**
    * Sets a new value for the signal.
    */
   set(value: T): void;
@@ -51,6 +56,9 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
     get: () => {
       // We need to call the signal inside the getter to ensure effects are triggered
       return state() as T;
+    },
+    peek: () => {
+      return internalValue;
     },
     set: (value) => {
       internalValue = value;

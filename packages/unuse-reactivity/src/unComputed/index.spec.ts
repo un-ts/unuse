@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { isUnComputed, UN_COMPUTED, unComputed } from '.';
+import { unEffect } from '../unEffect';
 import { unSignal } from '../unSignal';
 
 describe('unComputed', () => {
@@ -13,12 +14,40 @@ describe('unComputed', () => {
 
     expect(myComputed).toBeTypeOf('object');
     expect(myComputed.get).toBeTypeOf('function');
+    expect(myComputed.peek).toBeTypeOf('function');
     expect(isUnComputed(myComputed)).toBe(true);
   });
 
   it('should get the derived value', () => {
     const myComputed = unComputed(() => 42);
     expect(myComputed.get()).toBe(42);
+  });
+
+  it('should peek the derived value without triggering effects', () => {
+    const fnSpy = vi.fn();
+
+    const mySignal = unSignal(42);
+    const myComputed = unComputed(() => mySignal.get());
+
+    unEffect(() => {
+      myComputed.peek();
+      fnSpy();
+    });
+
+    expect(fnSpy).toHaveBeenCalledTimes(1);
+
+    expect(myComputed.peek()).toBeUndefined();
+    expect(myComputed.get()).toBe(42);
+
+    expect(fnSpy).toHaveBeenCalledTimes(1);
+    expect(myComputed.peek()).toBe(42);
+
+    mySignal.set(100);
+    expect(myComputed.peek()).toBe(42);
+    expect(fnSpy).toHaveBeenCalledTimes(1);
+    expect(myComputed.get()).toBe(100);
+    expect(fnSpy).toHaveBeenCalledTimes(1);
+    expect(myComputed.peek()).toBe(100);
   });
 
   it('should react on derived signal value', () => {
