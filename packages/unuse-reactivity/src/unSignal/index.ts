@@ -36,6 +36,11 @@ export interface UnSignal<T> {
   get(): T;
 
   /**
+   * Retrieves the current value of the signal without triggering effects.
+   */
+  peek(): T;
+
+  /**
    * Sets a new value for the signal.
    */
   set(value: T): void;
@@ -97,6 +102,7 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
 
       return value;
     },
+    peek: () => state.value,
     set: setter,
     update: (updater) => {
       setter(updater(state.value));
@@ -115,6 +121,7 @@ export function isUnSignal<T>(value: unknown): value is UnSignal<T> {
     UN_SIGNAL in value &&
     value[UN_SIGNAL] === true &&
     typeof (value as UnSignal<T>).get === 'function' &&
+    typeof (value as UnSignal<T>).peek === 'function' &&
     typeof (value as UnSignal<T>).set === 'function' &&
     typeof (value as UnSignal<T>).update === 'function'
   );
