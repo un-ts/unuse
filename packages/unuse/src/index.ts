@@ -11,4 +11,5 @@ export * from './unRefElement';
 export * from './unResolve';
 export * from './useEventListener';
 export * from './useIntervalFn';
+export * from './useToggle';
 export * from './useWebSocket';
