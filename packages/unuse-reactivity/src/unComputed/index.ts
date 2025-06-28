@@ -16,10 +16,20 @@ export const UN_COMPUTED = Symbol('UN_COMPUTED');
  */
 export interface UnComputed<T> {
   readonly [UN_COMPUTED]: true;
+
   /**
    * Retrieves the current value of the computed.
    */
   get(): T;
+
+  /**
+   * Retrieves the last computed value without re-evaluating the computation.
+   *
+   * This is useful for accessing the value without triggering any effects or re-computations.
+   *
+   * Returns `undefined` if the value has not been computed yet.
+   */
+  peek(): T | undefined;
 }
 
 /**
@@ -30,13 +40,17 @@ export interface UnComputed<T> {
  * @returns An `UnComputed` object that has a `get` method to retrieve the current value.
  */
 export function unComputed<T>(callback: () => T): UnComputed<T> {
-  const value = computed(callback);
+  let internalValue: T | undefined = undefined;
+  const state = computed(callback);
 
   return {
     [UN_COMPUTED]: true,
-    get() {
-      // We need to call the computed inside the getter to ensure effects are triggered
-      return value();
+    get: () => {
+      internalValue = state();
+      return internalValue;
+    },
+    peek: () => {
+      return internalValue;
     },
   };
 }
