@@ -28,22 +28,22 @@ describeVue('useEventListener', () => {
     });
 
     it('should add listener', () => {
-      expect(addSpy).toBeCalledTimes(1);
+      expect(addSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should trigger listener', () => {
-      expect(listener).not.toBeCalled();
+      expect(listener).not.toHaveBeenCalled();
       target.dispatchEvent(new MouseEvent(event));
-      expect(listener).toBeCalledTimes(1);
+      expect(listener).toHaveBeenCalledTimes(1);
     });
 
     it('should remove listener', () => {
-      expect(removeSpy).not.toBeCalled();
+      expect(removeSpy).not.toHaveBeenCalled();
 
       stop();
 
-      expect(removeSpy).toBeCalledTimes(1);
-      expect(removeSpy).toBeCalledWith(event, listener, options);
+      expect(removeSpy).toHaveBeenCalledTimes(1);
+      expect(removeSpy).toHaveBeenCalledWith(event, listener, options);
     });
   });
 });

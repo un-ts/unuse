@@ -188,13 +188,13 @@ export default defineConfig(
 
   //#region overrides
   {
-    name: '**/test/**/*.ts overrides',
-    files: ['**/test/**/*.spec.ts', '**/test/**/*.spec.d.ts'],
+    name: '**/*.spec.ts overrides',
+    files: ['**/*.spec.ts', '**/*.spec.d.ts'],
     plugins: {
       vitest: eslintPluginVitest,
     },
     rules: {
-      'deprecation/deprecation': 'off',
+      '@typescript-eslint/no-deprecated': 'off',
 
       '@typescript-eslint/restrict-template-expressions': [
         'error',
@@ -212,6 +212,7 @@ export default defineConfig(
       'vitest/prefer-each': 'error',
       'vitest/prefer-to-have-length': 'error',
       'vitest/valid-expect': ['error', { maxArgs: 2 }],
+      'vitest/warn-todo': 'warn',
     },
     settings: {
       vitest: {
