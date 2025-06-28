@@ -1,6 +1,6 @@
 {
   "name": "unuse-react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "learn once, use everywhere",
   "scripts": {
     "build": "tsdown"

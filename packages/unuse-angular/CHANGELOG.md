@@ -1,5 +1,16 @@
 # unuse-angular
 
+## 0.3.0
+
+### Minor Changes
+
+- [#43](https://github.com/un-ts/unuse/pull/43) [`18c3e78`](https://github.com/un-ts/unuse/commit/18c3e78ea91f9ca7b4d084ba95d0b6d7cf9f6f12) Thanks [@Shinigami92](https://github.com/Shinigami92)! - feat: add `unEffect` and `unEffectScope`
+
+### Patch Changes
+
+- Updated dependencies [[`18c3e78`](https://github.com/un-ts/unuse/commit/18c3e78ea91f9ca7b4d084ba95d0b6d7cf9f6f12)]:
+  - unuse@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
