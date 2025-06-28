@@ -18,7 +18,7 @@ export function unWatch<T>(
   let { immediate = false } = options;
 
   let firstRun = true;
-  let oldValue: T | undefined = undefined;
+  let oldValue: T | undefined = immediate ? undefined : source.get();
 
   return unEffectScope(() => {
     unEffect(() => {
