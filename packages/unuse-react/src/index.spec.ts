@@ -87,7 +87,7 @@ describe('unuse-react', () => {
       expect(hook.result.current).toBe(42);
     });
 
-    it('should resolve an UnSignal to an UnSignal when framework is null', () => {
+    it('should resolve an UnSignal to an UnSignal when framework is none', () => {
       const mySignal = unSignal(42);
       const resolved = unResolve(mySignal, { framework: 'none' });
 
@@ -95,7 +95,7 @@ describe('unuse-react', () => {
       expect(resolved.get()).toBe(42);
     });
 
-    it('should resolve an UnSignal to an UnComputed when framework is null and readonly is true', () => {
+    it('should resolve an UnSignal to an UnComputed when framework is none and readonly is true', () => {
       const mySignal = unSignal(42);
       const resolved = unResolve(mySignal, {
         framework: 'none',
