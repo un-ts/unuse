@@ -8,11 +8,7 @@
 import type { ReactiveFlags, ReactiveNode } from 'alien-signals/system';
 import { createReactiveSystem } from 'alien-signals/system';
 
-declare module 'alien-signals/system' {
-  enum ReactiveFlags {
-    Queued = 64,
-  }
-}
+const Queued = 1 << 6;
 
 type EffectScope = ReactiveNode;
 
@@ -345,8 +341,8 @@ function updateSignal(s: Signal, value: any): boolean {
 
 function notify(e: Effect | EffectScope) {
   const flags = e.flags;
-  if (!(flags & (64 satisfies ReactiveFlags.Queued))) {
-    e.flags = flags | (64 satisfies ReactiveFlags.Queued);
+  if (!(flags & Queued)) {
+    e.flags = flags | Queued;
     const subs = e.subs;
     if (subs === undefined) {
       queuedEffects[queuedEffectsLength++] = e;
@@ -379,8 +375,8 @@ function run(e: Effect | EffectScope, flags: ReactiveFlags): void {
   while (link !== undefined) {
     const dep = link.dep;
     const depFlags = dep.flags;
-    if (depFlags & (64 satisfies ReactiveFlags.Queued)) {
-      run(dep, (dep.flags = depFlags & (~64 satisfies ReactiveFlags.Queued)));
+    if (depFlags & Queued) {
+      run(dep, (dep.flags = depFlags & ~Queued));
     }
 
     link = link.nextDep;
@@ -391,7 +387,7 @@ function flush(): void {
   while (notifyIndex < queuedEffectsLength) {
     const effect = queuedEffects[notifyIndex]!;
     queuedEffects[notifyIndex++] = undefined;
-    run(effect, (effect.flags &= ~(64 satisfies ReactiveFlags.Queued)));
+    run(effect, (effect.flags &= ~Queued));
   }
 
   notifyIndex = 0;
