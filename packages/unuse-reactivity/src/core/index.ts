@@ -8,9 +8,6 @@
 import type { ReactiveFlags, ReactiveNode } from 'alien-signals/system';
 import { createReactiveSystem } from 'alien-signals/system';
 
-// const enum EffectFlags {
-//   Queued = 1 << 6,
-// }
 const Queued = 1 << 6;
 
 type EffectScope = ReactiveNode;
