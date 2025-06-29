@@ -40,14 +40,16 @@ describe('unSignal', () => {
 
   it('should update based on previous value', () => {
     const mySignal = unSignal(42);
-    mySignal.update((prev) => prev + 10);
+    const newValue = mySignal.update((prev) => prev + 10);
+    expect(newValue).toBe(52);
     expect(mySignal.get()).toBe(52);
   });
 
   it('should handle multiple consecutive updates', () => {
     const mySignal = unSignal(10);
     mySignal.update((prev) => prev * 2); // 20
-    mySignal.update((prev) => prev + 5); // 25
+    const newValue = mySignal.update((prev) => prev + 5); // 25
+    expect(newValue).toBe(25);
     expect(mySignal.get()).toBe(25);
   });
 
