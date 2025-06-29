@@ -210,9 +210,6 @@ importers:
       '@types/react':
         specifier: '>=19'
         version: 19.1.8
-      alien-signals:
-        specifier: ^2.0.5
-        version: 2.0.5
       react:
         specifier: '>=19'
         version: 19.1.0
