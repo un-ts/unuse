@@ -27,6 +27,7 @@
     "dist"
   ],
   "dependencies": {
+    "alien-signals": "^2.0.5",
     "unuse-reactivity": "workspace:*"
   },
   "devDependencies": {

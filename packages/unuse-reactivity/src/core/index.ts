@@ -200,8 +200,16 @@ export function unSignal<T>(initialValue?: T): UnSignal<T | undefined> {
 /**
  * Checks if a value is an `UnSignal`.
  */
-export function isUnSignal<T>(r: unknown): r is UnSignal<T> {
-  return r ? (r as any)[UN_SIGNAL] === true : false;
+export function isUnSignal<T>(value: unknown): value is UnSignal<T> {
+  return (
+    !!value &&
+    typeof value === 'object' &&
+    UN_SIGNAL in value &&
+    value[UN_SIGNAL] === true &&
+    typeof (value as UnSignal<T>).get === 'function' &&
+    typeof (value as UnSignal<T>).set === 'function' &&
+    typeof (value as UnSignal<T>).update === 'function'
+  );
 }
 
 //#endregion
@@ -255,8 +263,14 @@ export function unComputed<T>(getter: (previousValue?: T) => T): UnComputed<T> {
  * Checks if a value is an `UnComputed` object.
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function isUnComputed<T = any>(r: any): r is UnComputed<T> {
-  return r ? r[UN_COMPUTED] === true : false;
+export function isUnComputed<T = any>(value: any): value is UnComputed<T> {
+  return (
+    !!value &&
+    typeof value === 'object' &&
+    UN_COMPUTED in value &&
+    value[UN_COMPUTED] === true &&
+    typeof (value as UnComputed<T>).get === 'function'
+  );
 }
 //#endregion
 
