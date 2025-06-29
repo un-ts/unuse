@@ -6,7 +6,6 @@
 // @see https://github.com/stackblitz/alien-signals/blob/v2.0.5/src/index.ts
 
 import type { ReactiveFlags, ReactiveNode } from 'alien-signals/system';
-// eslint-disable-next-line import-x/no-unresolved
 import { createReactiveSystem } from 'alien-signals/system';
 
 // const enum EffectFlags {
