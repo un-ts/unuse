@@ -1,4 +1,17 @@
-import { signal } from 'alien-signals';
+import type { ReactiveFlags, ReactiveNode } from 'alien-signals';
+import {
+  REACTIVITY_STATE,
+  flush,
+  link,
+  propagate,
+  shallowPropagate,
+  updateSignal,
+} from '../unReactiveSystem';
+
+export interface UnSignalState<T> extends ReactiveNode {
+  previousValue: T;
+  value: T;
+}
 
 /**
  * A unique symbol used to identify `UnSignal` objects.
@@ -43,22 +56,51 @@ export function unSignal<T = undefined>(): UnSignal<T | undefined>;
  * @returns An `UnSignal` object that has a `get` method to retrieve the current value, a `set` method to update the value, and an `update` method to update based on the previous value.
  */
 export function unSignal<T>(initialValue?: T): UnSignal<T> {
-  let internalValue = initialValue as T;
-  const state = signal(initialValue);
+  const state: UnSignalState<T> = {
+    previousValue: initialValue as T,
+    value: initialValue as T,
+    subs: undefined,
+    subsTail: undefined,
+    flags: 1 satisfies ReactiveFlags.Mutable,
+  };
+
+  const setter: UnSignal<T>['set'] = (newValue) => {
+    if (state.value !== (state.value = newValue)) {
+      state.flags = 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty;
+      const subs = state.subs;
+      if (subs !== undefined) {
+        propagate(subs);
+        if (!REACTIVITY_STATE.batchDepth) {
+          flush();
+        }
+      }
+    }
+  };
 
   return {
     [UN_SIGNAL]: true,
     get: () => {
-      // We need to call the signal inside the getter to ensure effects are triggered
-      return state() as T;
+      const value = state.value;
+      if (
+        state.flags & (16 satisfies ReactiveFlags.Dirty) &&
+        updateSignal(state, value)
+      ) {
+        const subs = state.subs;
+        if (subs !== undefined) {
+          shallowPropagate(subs);
+        }
+      }
+
+      if (REACTIVITY_STATE.activeSub !== undefined) {
+        link(state, REACTIVITY_STATE.activeSub);
+      }
+
+      return value;
     },
-    set: (value) => {
-      internalValue = value;
-      state(value);
-    },
+    set: setter,
     update: (updater) => {
-      internalValue = updater(internalValue);
-      state(internalValue);
+      setter(updater(state.value));
+      return state.value;
     },
   };
 }
