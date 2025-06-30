@@ -53,6 +53,33 @@
       "matchPackageNames": ["prettier"]
     },
     {
+      "groupName": "angular",
+      "matchPackageNames": ["@angular/**"]
+    },
+    {
+      "groupName": "react",
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom",
+        "@vitejs/plugin-react",
+        "@testing-library/react"
+      ]
+    },
+    {
+      "groupName": "solid",
+      "matchPackageNames": [
+        "solid-js",
+        "vite-plugin-solid",
+        "@solidjs/testing-library"
+      ]
+    },
+    {
+      "groupName": "vue",
+      "matchPackageNames": ["vue", "vue-tsc", "@vitejs/plugin-vue"]
+    },
+    {
       "groupName": "typescript",
       "matchPackageNames": ["typescript"]
     },
