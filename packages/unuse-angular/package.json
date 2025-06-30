@@ -30,7 +30,8 @@
     "unuse": "workspace:*"
   },
   "devDependencies": {
-    "@angular/platform-browser": "20.0.4"
+    "@angular/core": "20.0.5",
+    "@angular/platform-browser": "20.0.5"
   },
   "peerDependencies": {
     "@angular/core": ">=20"

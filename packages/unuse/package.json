@@ -31,8 +31,10 @@
     "unuse-reactivity": "workspace:*"
   },
   "devDependencies": {
-    "@angular/compiler": "20.0.4",
-    "@angular/platform-browser": "20.0.4",
+    "@angular/common": "20.0.5",
+    "@angular/compiler": "20.0.5",
+    "@angular/core": "20.0.5",
+    "@angular/platform-browser": "20.0.5",
     "@solidjs/testing-library": "0.8.10",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.3.0",
