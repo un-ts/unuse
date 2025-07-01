@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { isUnSignal, UN_SIGNAL, unSignal } from '.';
+import { unEffect } from '../unEffect';
 
 describe('unSignal', () => {
   it('should be defined', () => {
@@ -12,6 +13,7 @@ describe('unSignal', () => {
 
     expect(mySignal).toBeTypeOf('object');
     expect(mySignal.get).toBeTypeOf('function');
+    expect(mySignal.peek).toBeTypeOf('function');
     expect(mySignal.set).toBeTypeOf('function');
     expect(mySignal.update).toBeTypeOf('function');
     expect(isUnSignal(mySignal)).toBe(true);
@@ -22,6 +24,7 @@ describe('unSignal', () => {
 
     expect(mySignal).toBeTypeOf('object');
     expect(mySignal.get).toBeTypeOf('function');
+    expect(mySignal.peek).toBeTypeOf('function');
     expect(mySignal.set).toBeTypeOf('function');
     expect(mySignal.update).toBeTypeOf('function');
     expect(isUnSignal(mySignal)).toBe(true);
@@ -49,6 +52,52 @@ describe('unSignal', () => {
     mySignal.update((prev) => prev * 2); // 20
     mySignal.update((prev) => prev + 5); // 25
     expect(mySignal.get()).toBe(25);
+  });
+
+  it('should trigger unEffect on set', () => {
+    const fn1Spy = vi.fn();
+
+    const mySignal = unSignal(42);
+
+    unEffect(() => {
+      mySignal.get();
+      fn1Spy();
+    });
+
+    mySignal.set(100);
+
+    expect(fn1Spy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should trigger unEffect on update', () => {
+    const fn1Spy = vi.fn();
+
+    const mySignal = unSignal(42);
+
+    unEffect(() => {
+      mySignal.get();
+      fn1Spy();
+    });
+
+    mySignal.update((prev) => prev + 10);
+
+    expect(fn1Spy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should peek the current value without triggering effects', () => {
+    const fn1Spy = vi.fn();
+
+    const mySignal = unSignal(42);
+
+    unEffect(() => {
+      mySignal.peek();
+      fn1Spy();
+    });
+
+    mySignal.set(100);
+    expect(mySignal.peek()).toBe(100);
+
+    expect(fn1Spy).toHaveBeenCalledTimes(1);
   });
 
   describe('isUnSignal', () => {
@@ -83,6 +132,7 @@ describe('unSignal', () => {
       const obj = {
         [UN_SIGNAL]: false,
         get: () => 42,
+        peek: () => 42,
         set: () => {},
         update: () => {},
       };
@@ -100,6 +150,7 @@ describe('unSignal', () => {
       const obj = {
         [UN_SIGNAL]: true,
         get: () => 42,
+        peek: () => 42,
         set: () => {},
         update: () => {},
       };
