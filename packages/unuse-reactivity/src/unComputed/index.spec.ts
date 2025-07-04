@@ -92,7 +92,15 @@ describe('unComputed', () => {
       expect(isUnComputed(obj)).toBe(false);
     });
 
-    it('should return true for an object with UN_COMPUTED', () => {
+    it('should return false for an object with UN_COMPUTED but not true', () => {
+      const obj = {
+        [UN_COMPUTED]: false,
+        get: () => 42,
+      };
+      expect(isUnComputed(obj)).toBe(false);
+    });
+
+    it('should return true for an object with UN_COMPUTED set to true', () => {
       const obj = {
         [UN_COMPUTED]: true,
         get: () => 42,

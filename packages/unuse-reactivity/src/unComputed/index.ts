@@ -89,5 +89,10 @@ export function unComputed<T>(callback: () => T): UnComputed<T> {
  * Checks if a value is an `UnComputed` object.
  */
 export function isUnComputed<T>(value: unknown): value is UnComputed<T> {
-  return typeof value === 'object' && value !== null && UN_COMPUTED in value;
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (value as any)[UN_COMPUTED] === true
+  );
 }
