@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { isUnComputed, UN_COMPUTED, unComputed } from '.';
+import { unEffect } from '../unEffect';
 import { unSignal } from '../unSignal';
 
 describe('unComputed', () => {
@@ -13,6 +14,7 @@ describe('unComputed', () => {
 
     expect(myComputed).toBeTypeOf('object');
     expect(myComputed.get).toBeTypeOf('function');
+    expect(myComputed.peek).toBeTypeOf('function');
     expect(isUnComputed(myComputed)).toBe(true);
   });
 
@@ -62,6 +64,23 @@ describe('unComputed', () => {
     // setting mySignal to same value does not trigger the computed again
     mySignal.set(1);
     expect(fnSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should peek the current value without triggering effects', () => {
+    const fn1Spy = vi.fn();
+
+    const mySignal = unSignal(42);
+    const myComputed = unComputed(mySignal.get);
+
+    unEffect(() => {
+      myComputed.peek();
+      fn1Spy();
+    });
+
+    mySignal.set(100);
+    expect(myComputed.peek()).toBe(100);
+
+    expect(fn1Spy).toHaveBeenCalledTimes(1);
   });
 
   describe('isUnComputed', () => {
