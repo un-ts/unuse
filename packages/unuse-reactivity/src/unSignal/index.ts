@@ -116,13 +116,9 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
  */
 export function isUnSignal<T>(value: unknown): value is UnSignal<T> {
   return (
-    !!value &&
     typeof value === 'object' &&
-    UN_SIGNAL in value &&
-    value[UN_SIGNAL] === true &&
-    typeof (value as UnSignal<T>).get === 'function' &&
-    typeof (value as UnSignal<T>).peek === 'function' &&
-    typeof (value as UnSignal<T>).set === 'function' &&
-    typeof (value as UnSignal<T>).update === 'function'
+    value !== null &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (value as any)[UN_SIGNAL] === true
   );
 }
