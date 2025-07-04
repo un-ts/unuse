@@ -4,6 +4,7 @@ import {
   flush,
   link,
   propagate,
+  setCurrentSub,
   shallowPropagate,
   updateSignal,
 } from '../unReactiveSystem';
@@ -69,22 +70,9 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
     flags: 1 satisfies ReactiveFlags.Mutable,
   };
 
-  const setter: UnSignal<T>['set'] = (newValue) => {
-    if (state.value !== (state.value = newValue)) {
-      state.flags = 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty;
-      const subs = state.subs;
-      if (subs !== undefined) {
-        propagate(subs);
-        if (!REACTIVITY_STATE.batchDepth) {
-          flush();
-        }
-      }
-    }
-  };
-
   return {
     [UN_SIGNAL]: true,
-    get: () => {
+    get() {
       const value = state.value;
       if (
         state.flags & (16 satisfies ReactiveFlags.Dirty) &&
@@ -102,10 +90,26 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
 
       return value;
     },
-    peek: () => state.value,
-    set: setter,
-    update: (updater) => {
-      setter(updater(state.value));
+    peek() {
+      const prev = setCurrentSub(undefined);
+      const val = this.get();
+      setCurrentSub(prev);
+      return val;
+    },
+    set(newValue) {
+      if (state.value !== (state.value = newValue)) {
+        state.flags = 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty;
+        const subs = state.subs;
+        if (subs !== undefined) {
+          propagate(subs);
+          if (!REACTIVITY_STATE.batchDepth) {
+            flush();
+          }
+        }
+      }
+    },
+    update(updater) {
+      this.set(updater(state.value));
       return state.value;
     },
   };
