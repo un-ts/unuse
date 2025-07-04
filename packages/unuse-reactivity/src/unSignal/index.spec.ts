@@ -128,25 +128,7 @@ describe('unSignal', () => {
       expect(isUnSignal(obj)).toBe(false);
     });
 
-    it('should return false for an object with UN_SIGNAL but not true', () => {
-      const obj = {
-        [UN_SIGNAL]: false,
-        get: () => 42,
-        peek: () => 42,
-        set: () => {},
-        update: () => {},
-      };
-      expect(isUnSignal(obj)).toBe(false);
-    });
-
-    it('should return false for an object with UN_SIGNAL but missing functions', () => {
-      const obj = {
-        [UN_SIGNAL]: true,
-      };
-      expect(isUnSignal(obj)).toBe(false);
-    });
-
-    it('should return true for an object with UN_SIGNAL set to true', () => {
+    it('should return true for an object with UN_SIGNAL', () => {
       const obj = {
         [UN_SIGNAL]: true,
         get: () => 42,

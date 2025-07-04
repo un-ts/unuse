@@ -89,11 +89,5 @@ export function unComputed<T>(callback: () => T): UnComputed<T> {
  * Checks if a value is an `UnComputed` object.
  */
 export function isUnComputed<T>(value: unknown): value is UnComputed<T> {
-  return (
-    !!value &&
-    typeof value === 'object' &&
-    UN_COMPUTED in value &&
-    value[UN_COMPUTED] === true &&
-    typeof (value as UnComputed<T>).get === 'function'
-  );
+  return typeof value === 'object' && value !== null && UN_COMPUTED in value;
 }

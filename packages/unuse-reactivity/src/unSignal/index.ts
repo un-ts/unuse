@@ -115,14 +115,5 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
  * Checks if a value is an `UnSignal`.
  */
 export function isUnSignal<T>(value: unknown): value is UnSignal<T> {
-  return (
-    !!value &&
-    typeof value === 'object' &&
-    UN_SIGNAL in value &&
-    value[UN_SIGNAL] === true &&
-    typeof (value as UnSignal<T>).get === 'function' &&
-    typeof (value as UnSignal<T>).peek === 'function' &&
-    typeof (value as UnSignal<T>).set === 'function' &&
-    typeof (value as UnSignal<T>).update === 'function'
-  );
+  return typeof value === 'object' && value !== null && UN_SIGNAL in value;
 }
