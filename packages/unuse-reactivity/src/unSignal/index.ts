@@ -115,10 +115,8 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
  * Checks if a value is an `UnSignal`.
  */
 export function isUnSignal<T>(value: unknown): value is UnSignal<T> {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (value as any)[UN_SIGNAL] === true
-  );
+  return value
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (value as any)[UN_SIGNAL] === true
+    : false;
 }
