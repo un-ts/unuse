@@ -70,48 +70,56 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
     flags: 1 satisfies ReactiveFlags.Mutable,
   };
 
+  const get: UnSignal<T>['get'] = () => {
+    const value = state.value;
+    if (
+      state.flags & (16 satisfies ReactiveFlags.Dirty) &&
+      updateSignal(state, value)
+    ) {
+      const subs = state.subs;
+      if (subs !== undefined) {
+        shallowPropagate(subs);
+      }
+    }
+
+    if (REACTIVITY_STATE.activeSub !== undefined) {
+      link(state, REACTIVITY_STATE.activeSub);
+    }
+
+    return value;
+  };
+
+  const peek: UnSignal<T>['peek'] = () => {
+    const prev = setCurrentSub(undefined);
+    const val = get();
+    setCurrentSub(prev);
+    return val;
+  };
+
+  const set: UnSignal<T>['set'] = (newValue) => {
+    if (state.value !== (state.value = newValue)) {
+      state.flags = 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty;
+      const subs = state.subs;
+      if (subs !== undefined) {
+        propagate(subs);
+        if (!REACTIVITY_STATE.batchDepth) {
+          flush();
+        }
+      }
+    }
+  };
+
+  const update: UnSignal<T>['update'] = (updater) => {
+    set(updater(state.value));
+    return state.value;
+  };
+
   return {
     [UN_SIGNAL]: true,
-    get() {
-      const value = state.value;
-      if (
-        state.flags & (16 satisfies ReactiveFlags.Dirty) &&
-        updateSignal(state, value)
-      ) {
-        const subs = state.subs;
-        if (subs !== undefined) {
-          shallowPropagate(subs);
-        }
-      }
-
-      if (REACTIVITY_STATE.activeSub !== undefined) {
-        link(state, REACTIVITY_STATE.activeSub);
-      }
-
-      return value;
-    },
-    peek() {
-      const prev = setCurrentSub(undefined);
-      const val = this.get();
-      setCurrentSub(prev);
-      return val;
-    },
-    set(newValue) {
-      if (state.value !== (state.value = newValue)) {
-        state.flags = 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty;
-        const subs = state.subs;
-        if (subs !== undefined) {
-          propagate(subs);
-          if (!REACTIVITY_STATE.batchDepth) {
-            flush();
-          }
-        }
-      }
-    },
-    update(updater) {
-      this.set(updater(state.value));
-      return state.value;
-    },
+    get,
+    peek,
+    set,
+    update,
   };
 }
 
