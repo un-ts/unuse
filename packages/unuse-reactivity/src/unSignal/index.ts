@@ -111,7 +111,6 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
 
   const update: UnSignal<T>['update'] = (updater) => {
     set(updater(state.value));
-    return state.value;
   };
 
   return {
