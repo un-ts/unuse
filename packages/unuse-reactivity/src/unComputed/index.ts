@@ -3,6 +3,7 @@ import {
   checkDirty,
   link,
   REACTIVITY_STATE,
+  setCurrentSub,
   shallowPropagate,
   updateComputed,
 } from '../unReactiveSystem';
@@ -10,32 +11,6 @@ import {
 export interface UnComputedState<T> extends ReactiveNode {
   value: T | undefined;
   getter: (previousValue?: T) => T;
-}
-
-export function computedOper<T>(this: UnComputedState<T>): T {
-  const flags = this.flags;
-  if (
-    flags & (16 satisfies ReactiveFlags.Dirty) ||
-    (flags & (32 satisfies ReactiveFlags.Pending) &&
-      checkDirty(this.deps!, this))
-  ) {
-    if (updateComputed(this)) {
-      const subs = this.subs;
-      if (subs !== undefined) {
-        shallowPropagate(subs);
-      }
-    }
-  } else if (flags & (32 satisfies ReactiveFlags.Pending)) {
-    this.flags = flags & ~(32 satisfies ReactiveFlags.Pending);
-  }
-
-  if (REACTIVITY_STATE.activeSub !== undefined) {
-    link(this, REACTIVITY_STATE.activeSub);
-  } else if (REACTIVITY_STATE.activeScope !== undefined) {
-    link(this, REACTIVITY_STATE.activeScope);
-  }
-
-  return this.value!;
 }
 
 /**
@@ -59,6 +34,11 @@ export interface UnComputed<T> {
    * Retrieves the current value of the computed.
    */
   get(): T;
+
+  /**
+   * Retrieves the current value of the signal without triggering effects.
+   */
+  peek(): T;
 }
 
 /**
@@ -69,7 +49,7 @@ export interface UnComputed<T> {
  * @returns An `UnComputed` object that has a `get` method to retrieve the current value.
  */
 export function unComputed<T>(callback: () => T): UnComputed<T> {
-  const get: UnComputed<T>['get'] = computedOper.bind({
+  const state: UnComputedState<T> = {
     value: undefined,
     subs: undefined,
     subsTail: undefined,
@@ -77,11 +57,41 @@ export function unComputed<T>(callback: () => T): UnComputed<T> {
     depsTail: undefined,
     flags: 17 as ReactiveFlags.Mutable | ReactiveFlags.Dirty,
     getter: callback,
-  } satisfies UnComputedState<T>) as UnComputed<T>['get'];
+  };
 
   return {
     [UN_COMPUTED]: true,
-    get,
+    get() {
+      const flags = state.flags;
+      if (
+        flags & (16 satisfies ReactiveFlags.Dirty) ||
+        (flags & (32 satisfies ReactiveFlags.Pending) &&
+          checkDirty(state.deps!, state))
+      ) {
+        if (updateComputed(state)) {
+          const subs = state.subs;
+          if (subs !== undefined) {
+            shallowPropagate(subs);
+          }
+        }
+      } else if (flags & (32 satisfies ReactiveFlags.Pending)) {
+        state.flags = flags & ~(32 satisfies ReactiveFlags.Pending);
+      }
+
+      if (REACTIVITY_STATE.activeSub !== undefined) {
+        link(state, REACTIVITY_STATE.activeSub);
+      } else if (REACTIVITY_STATE.activeScope !== undefined) {
+        link(state, REACTIVITY_STATE.activeScope);
+      }
+
+      return state.value!;
+    },
+    peek() {
+      const prev = setCurrentSub(undefined);
+      const val = this.get();
+      setCurrentSub(prev);
+      return val;
+    },
   };
 }
 
