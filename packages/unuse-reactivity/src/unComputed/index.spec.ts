@@ -119,11 +119,12 @@ describe('unComputed', () => {
       expect(isUnComputed(obj)).toBe(false);
     });
 
-    it('should return false for an object with UN_COMPUTED but missing functions', () => {
+    it('should return true for an object with UN_COMPUTED set to true but functions are missing', () => {
+      // it was decided to do this for performance reasons
       const obj = {
         [UN_COMPUTED]: true,
       };
-      expect(isUnComputed(obj)).toBe(false);
+      expect(isUnComputed(obj)).toBe(true);
     });
 
     it('should return true for an object with UN_COMPUTED set to true', () => {
