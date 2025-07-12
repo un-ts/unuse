@@ -100,7 +100,6 @@ export function unComputed<T>(callback: () => T): UnComputed<T> {
  */
 export function isUnComputed<T>(value: unknown): value is UnComputed<T> {
   return value
-    ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare, @typescript-eslint/no-unnecessary-condition
-      (value as UnComputed<T>)[UN_COMPUTED] === true
+    ? (value as Partial<UnComputed<T>>)[UN_COMPUTED] === true
     : false;
 }
