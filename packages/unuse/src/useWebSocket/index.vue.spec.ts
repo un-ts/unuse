@@ -1,28 +1,32 @@
 // @vitest-environment happy-dom
 
-import { beforeEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import type { Ref } from 'vue';
-import { isRef } from 'vue';
-import type { WebSocketStatus } from '.';
+import { isRef, nextTick, shallowRef } from 'vue';
+import type { UseWebSocketReturn, WebSocketStatus } from '.';
 import { useWebSocket } from '.';
 import { describeVue, useSetup } from '../_testUtils/vue';
 
 describeVue('useWebSocket', () => {
   const mockWebSocket = vi.fn<(host: string) => WebSocket>();
+  let vm: ReturnType<
+    typeof useSetup<{ ref: UseWebSocketReturn<unknown> }>
+  > | null = null;
 
   mockWebSocket.prototype.send = vi.fn();
   mockWebSocket.prototype.close = vi.fn();
 
   beforeEach(() => {
     vi.stubGlobal('WebSocket', mockWebSocket);
+  });
 
-    return () => {
-      vi.unstubAllGlobals();
-    };
+  afterEach(() => {
+    vm?.unmount();
+    vi.unstubAllGlobals();
   });
 
   it('should initialize web socket', () => {
-    const vm = useSetup(() => {
+    vm = useSetup(() => {
       const ref = useWebSocket('ws://localhost');
       return { ref };
     });
@@ -41,5 +45,55 @@ describeVue('useWebSocket', () => {
     expect(
       (vm.ref.ws as unknown as Ref<WebSocket | undefined>).value
     ).toBeDefined();
+  });
+
+  it('should reconnect if URL changes', async () => {
+    const url = shallowRef('ws://localhost');
+    vm = useSetup(() => {
+      const ref = useWebSocket(url);
+      return { ref };
+    });
+
+    url.value = 'ws://127.0.0.1';
+    await nextTick();
+
+    expect(mockWebSocket.prototype.close).toHaveBeenCalledWith(1000, undefined);
+    expect(mockWebSocket).toHaveBeenCalledWith('ws://127.0.0.1', []);
+    expect((vm.ref.status as unknown as Ref<WebSocketStatus>).value).toBe(
+      'CONNECTING'
+    );
+  });
+
+  it('should not reconnect on URL change if immediate and autoConnect are false', async () => {
+    const url = shallowRef('ws://localhost');
+    vm = useSetup(() => {
+      const ref = useWebSocket(url, {
+        immediate: false,
+        autoConnect: false,
+      });
+      return { ref };
+    });
+
+    url.value = 'ws://127.0.0.1';
+    await nextTick();
+
+    expect(mockWebSocket.prototype.close).not.toHaveBeenCalled();
+    expect(mockWebSocket).not.toHaveBeenCalledWith('ws://127.0.0.1', []);
+    expect((vm.ref.status as unknown as Ref<WebSocketStatus>).value).toBe(
+      'CLOSED'
+    );
+  });
+
+  it('should remain closed if immediate is false', () => {
+    vm = useSetup(() => {
+      const ref = useWebSocket('ws://localhost', {
+        immediate: false,
+      });
+      return { ref };
+    });
+
+    expect((vm.ref.status as unknown as Ref<WebSocketStatus>).value).toBe(
+      'CLOSED'
+    );
   });
 });
