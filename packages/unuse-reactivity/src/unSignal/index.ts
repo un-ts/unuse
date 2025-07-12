@@ -127,7 +127,7 @@ export function unSignal<T>(initialValue?: T): UnSignal<T> {
  */
 export function isUnSignal<T>(value: unknown): value is UnSignal<T> {
   return value
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (value as any)[UN_SIGNAL] === true
+    ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare, @typescript-eslint/no-unnecessary-condition
+      (value as UnSignal<T>)[UN_SIGNAL] === true
     : false;
 }

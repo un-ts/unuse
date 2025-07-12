@@ -139,6 +139,14 @@ describe('unSignal', () => {
       expect(isUnSignal(obj)).toBe(false);
     });
 
+    it('should return true for an object with UN_SIGNAL set to true but functions are missing', () => {
+      // it was decided to do this for performance reasons
+      const obj = {
+        [UN_SIGNAL]: true,
+      };
+      expect(isUnSignal(obj)).toBe(true);
+    });
+
     it('should return true for an object with UN_SIGNAL set to true', () => {
       const obj = {
         [UN_SIGNAL]: true,
