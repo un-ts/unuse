@@ -1,6 +1,9 @@
+import type { ReactiveFlags } from 'alien-signals';
 import { describe, expect, it, vi } from 'vitest';
 import { isUnComputed, UN_COMPUTED, unComputed } from '.';
 import { unEffect } from '../unEffect';
+import { unEffectScope } from '../unEffectScope';
+import { getCurrentScope, REACTIVITY_STATE } from '../unReactiveSystem';
 import { unSignal } from '../unSignal';
 
 describe('unComputed', () => {
@@ -81,6 +84,46 @@ describe('unComputed', () => {
     expect(myComputed.peek()).toBe(100);
 
     expect(fn1Spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should link with active scope', () => {
+    const mySignal = unSignal(42);
+
+    unEffectScope(() => {
+      const myComputed = unComputed(mySignal.get);
+
+      const actual = myComputed.get();
+      expect(actual).toBe(42);
+
+      expect(REACTIVITY_STATE.activeScope).toBe(getCurrentScope());
+    });
+
+    expect(REACTIVITY_STATE.activeScope).toBeUndefined();
+  });
+
+  it('should update on dirty', () => {
+    const mySignal = unSignal(42);
+
+    unEffectScope(() => {
+      const myComputed = unComputed(mySignal.get);
+
+      const actual = myComputed.get();
+      expect(actual).toBe(42);
+
+      // eslint-disable-next-line unicorn/consistent-function-scoping
+      const getMyComputedFlags = () =>
+        getCurrentScope()?.deps?.dep.deps?.dep.flags;
+
+      expect(getMyComputedFlags()).toSatisfy(
+        (flags) => ((16 satisfies ReactiveFlags.Dirty) & flags) === 0
+      );
+
+      mySignal.set(100);
+      expect(getMyComputedFlags()).toSatisfy(
+        (flags) => ((16 satisfies ReactiveFlags.Dirty) & flags) !== 0
+      );
+      expect(myComputed.get()).toBe(100);
+    });
   });
 
   describe('isUnComputed', () => {

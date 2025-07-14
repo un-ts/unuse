@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { unEffect } from '.';
+import { getCurrentSub } from '../unReactiveSystem';
 import { unSignal } from '../unSignal';
 
 describe('unEffect', () => {
@@ -43,5 +44,24 @@ describe('unEffect', () => {
 
     source.set(2);
     expect(fnSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should trigger in current sub', () => {
+    const source = unSignal(0);
+
+    expect(getCurrentSub()).toBeUndefined();
+
+    unEffect(() => {
+      const outerSub = getCurrentSub();
+      expect(outerSub).toBeDefined();
+
+      unEffect(() => {
+        const innerSub = getCurrentSub();
+        expect(innerSub).toBeDefined();
+        expect(innerSub).not.toBe(outerSub);
+
+        source.get();
+      });
+    });
   });
 });
