@@ -1,5 +1,16 @@
 # unuse-react
 
+## 0.4.0
+
+### Minor Changes
+
+- [#66](https://github.com/un-ts/unuse/pull/66) [`2b65507`](https://github.com/un-ts/unuse/commit/2b65507b7541a0847e7ed7e3a07306db49e7d831) Thanks [@teleskop150750](https://github.com/teleskop150750)! - feat: add computed peek
+
+### Patch Changes
+
+- Updated dependencies [[`2b65507`](https://github.com/un-ts/unuse/commit/2b65507b7541a0847e7ed7e3a07306db49e7d831)]:
+  - unuse@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes
