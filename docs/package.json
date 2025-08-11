@@ -10,6 +10,6 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "vitepress": "1.6.3"
+    "vitepress": "1.6.4"
   }
 }
