@@ -31,7 +31,7 @@
     "unuse-reactivity": "workspace:*"
   },
   "devDependencies": {
-    "@angular/common": "20.0.5",
+    "@angular/common": "20.3.14",
     "@angular/compiler": "20.0.5",
     "@angular/core": "20.0.5",
     "@angular/platform-browser": "20.0.5",
