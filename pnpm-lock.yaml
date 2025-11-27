@@ -224,8 +224,8 @@ importers:
         version: 3.5.17(typescript@5.8.3)
     devDependencies:
       '@angular/common':
-        specifier: 20.0.5
-        version: 20.0.5(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2)
+        specifier: 20.3.14
+        version: 20.3.14(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2)
       '@angular/compiler':
         specifier: 20.0.5
         version: 20.0.5
@@ -234,7 +234,7 @@ importers:
         version: 20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2)
       '@angular/platform-browser':
         specifier: 20.0.5
-        version: 20.0.5(@angular/common@20.0.5(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))
+        version: 20.0.5(@angular/common@20.3.14(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))
       '@solidjs/testing-library':
         specifier: 0.8.10
         version: 0.8.10(solid-js@1.9.7)
@@ -262,7 +262,7 @@ importers:
         version: 20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2)
       '@angular/platform-browser':
         specifier: 20.0.5
-        version: 20.0.5(@angular/common@20.0.5(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))
+        version: 20.0.5(@angular/common@20.3.14(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))
 
   packages/unuse-react:
     dependencies:
@@ -462,6 +462,13 @@ packages:
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
       '@angular/core': 20.0.5
+      rxjs: ^6.5.3 || ^7.4.0
+
+  '@angular/common@20.3.14':
+    resolution: {integrity: sha512-OOUvjTtnpktJLsNupA+GFT2q5zNocPdpOENA8aSrXvAheNybLjgi+otO3U3sQsvB1VwaoEZ9GT5O3lZlstnA/A==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@angular/core': 20.3.14
       rxjs: ^6.5.3 || ^7.4.0
 
   '@angular/compiler-cli@20.0.5':
@@ -4936,6 +4943,12 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
 
+  '@angular/common@20.3.14(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/core': 20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2)
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
   '@angular/compiler-cli@20.0.5(@angular/compiler@20.0.5)(typescript@5.8.3)':
     dependencies:
       '@angular/compiler': 20.0.5
@@ -4974,6 +4987,12 @@ snapshots:
   '@angular/platform-browser@20.0.5(@angular/common@20.0.5(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))':
     dependencies:
       '@angular/common': 20.0.5(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core': 20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2)
+      tslib: 2.8.1
+
+  '@angular/platform-browser@20.0.5(@angular/common@20.3.14(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/common': 20.3.14(@angular/core@20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2))(rxjs@7.8.2)
       '@angular/core': 20.0.5(@angular/compiler@20.0.5)(rxjs@7.8.2)
       tslib: 2.8.1
 
