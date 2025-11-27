@@ -38,7 +38,7 @@
     "@solidjs/testing-library": "0.8.10",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.3.0",
-    "happy-dom": "18.0.1",
+    "happy-dom": "20.0.0",
     "react-dom": "19.1.0"
   },
   "peerDependencies": {
