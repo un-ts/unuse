@@ -39,7 +39,7 @@
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.3.0",
     "happy-dom": "18.0.1",
-    "react-dom": "19.1.0"
+    "react-dom": "19.2.1"
   },
   "peerDependencies": {
     "@angular/core": ">=20",
